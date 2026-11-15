@@ -50,17 +50,23 @@ class DashboardController extends Controller
 
         if ($searchQuery) {
             $trimmed = trim($searchQuery);
-            $recentAntrianQuery->where(function ($q) use ($trimmed) {
-                $q->where('deskripsi', 'ilike', "%{$trimmed}%")
-                  ->orWhere('nama_lengkap', 'ilike', "%{$trimmed}%")
-                  ->orWhere('nomor_referensi', 'ilike', "%{$trimmed}%");
+            $digitsOnly = preg_replace('/\D/', '', $trimmed);
 
-                if (ctype_digit($trimmed)) {
-                    $encryptedInput = \App\Services\Security\CryptoHelper::encryptField($trimmed);
-                    $q->orWhere('nik', $encryptedInput)
-                      ->orWhere('nip', $encryptedInput);
-                }
-            });
+            // Jalur 1: Pencarian Identitas Sensitif Terenkripsi (Exact-Match via B-Tree Index)
+            if (strlen($digitsOnly) === 16 && preg_match('/^[\d\s\.\-]+$/', $trimmed)) {
+                $encryptedNik = \App\Services\Security\CryptoHelper::encryptField($digitsOnly);
+                $recentAntrianQuery->where('nik', $encryptedNik);
+            } elseif (strlen($digitsOnly) === 18 && preg_match('/^[\d\s\.\-]+$/', $trimmed)) {
+                $encryptedNip = \App\Services\Security\CryptoHelper::encryptField($digitsOnly);
+                $recentAntrianQuery->where('nip', $encryptedNip);
+            } else {
+                // Jalur 2: Pencarian Teks / Deskriptif Non-Eksak
+                $recentAntrianQuery->where(function ($q) use ($trimmed) {
+                    $q->where('deskripsi', 'ilike', "%{$trimmed}%")
+                      ->orWhere('nama_lengkap', 'ilike', "%{$trimmed}%")
+                      ->orWhere('nomor_referensi', 'ilike', "%{$trimmed}%");
+                });
+            }
         }
 
         $recentAntrian = $recentAntrianQuery

@@ -1,0 +1,56 @@
+[
+    {
+        "Scenario": "phase1_query_a_combined",
+        "Primary Scan": "Seq Scan",
+        "Index Used": "None (Seq Scan)",
+        "Exec Time (ms)": "200.236",
+        "Plan Time (ms)": "0.798",
+        "Shared Hit": 3778,
+        "Shared Read": 0
+    },
+    {
+        "Scenario": "phase1_query_b_combined_nostatus",
+        "Primary Scan": "Seq Scan",
+        "Index Used": "None (Seq Scan)",
+        "Exec Time (ms)": "539.946",
+        "Plan Time (ms)": "0.580",
+        "Shared Hit": 3704,
+        "Shared Read": 0
+    },
+    {
+        "Scenario": "phase1_query_c_separated_nik_status",
+        "Primary Scan": "Index Scan",
+        "Index Used": "idx_pendaftaran_nik_active",
+        "Exec Time (ms)": "0.183",
+        "Plan Time (ms)": "0.144",
+        "Shared Hit": 4,
+        "Shared Read": 0
+    },
+    {
+        "Scenario": "phase1_query_d_separated_nik_active",
+        "Primary Scan": "Index Scan",
+        "Index Used": "idx_pendaftaran_nik_active",
+        "Exec Time (ms)": "0.121",
+        "Plan Time (ms)": "0.255",
+        "Shared Hit": 4,
+        "Shared Read": 0
+    },
+    {
+        "Scenario": "phase1_query_e_separated_nip_status",
+        "Primary Scan": "Index Scan",
+        "Index Used": "idx_pendaftaran_nip_active",
+        "Exec Time (ms)": "0.487",
+        "Plan Time (ms)": "0.169",
+        "Shared Hit": 4,
+        "Shared Read": 0
+    },
+    {
+        "Scenario": "phase1_query_f_separated_text",
+        "Primary Scan": "Seq Scan",
+        "Index Used": "None (Seq Scan)",
+        "Exec Time (ms)": "129.505",
+        "Plan Time (ms)": "0.369",
+        "Shared Hit": 3778,
+        "Shared Read": 0
+    }
+]

@@ -41,19 +41,24 @@ class VerifikasiController extends Controller
             ->when($deskripsi, fn($q, $d) => $q->where('deskripsi', 'ilike', '%' . trim($d) . '%'))
             ->when($search, function ($q, $search) {
                 $trimmed = trim($search);
+                $digitsOnly = preg_replace('/\D/', '', $trimmed);
 
-                $q->where(function ($subQ) use ($trimmed) {
-                    $subQ->where('nama_lengkap', 'ilike', "%{$trimmed}%")
-                         ->orWhere('nomor_referensi', 'ilike', "%{$trimmed}%")
-                         ->orWhere('deskripsi', 'ilike', "%{$trimmed}%");
-
-                    // Jika input berupa angka/NIP/NIK, enkripsi deterministik dan cocokkan langsung
-                    if (ctype_digit($trimmed)) {
-                        $encryptedInput = \App\Services\Security\CryptoHelper::encryptField($trimmed);
-                        $subQ->orWhere('nik', $encryptedInput)
-                             ->orWhere('nip', $encryptedInput);
-                    }
-                });
+                // Jalur 1: Pencarian Identitas Sensitif Terenkripsi (Exact-Match via B-Tree Index)
+                // Memisahkan NIK (16 digit) dan NIP (18 digit) agar terhindar dari Seq Scan pada compound OR
+                if (strlen($digitsOnly) === 16 && preg_match('/^[\d\s\.\-]+$/', $trimmed)) {
+                    $encryptedNik = \App\Services\Security\CryptoHelper::encryptField($digitsOnly);
+                    $q->where('nik', $encryptedNik);
+                } elseif (strlen($digitsOnly) === 18 && preg_match('/^[\d\s\.\-]+$/', $trimmed)) {
+                    $encryptedNip = \App\Services\Security\CryptoHelper::encryptField($digitsOnly);
+                    $q->where('nip', $encryptedNip);
+                } else {
+                    // Jalur 2: Pencarian Teks / Deskriptif Non-Eksak (Nama, Nomor Referensi, Deskripsi)
+                    $q->where(function ($subQ) use ($trimmed) {
+                        $subQ->where('nama_lengkap', 'ilike', "%{$trimmed}%")
+                             ->orWhere('nomor_referensi', 'ilike', "%{$trimmed}%")
+                             ->orWhere('deskripsi', 'ilike', "%{$trimmed}%");
+                    });
+                }
             })
             ->orderBy('created_at', 'asc') // FIFO
             ->paginate(15)
