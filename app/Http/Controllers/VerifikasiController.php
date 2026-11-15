@@ -38,7 +38,7 @@ class VerifikasiController extends Controller
         $pendaftaranList = PendaftaranTte::with(['skpd', 'jabatan', 'golongan'])
             ->when($status, fn($q) => $q->where('status', $status))
             ->when($skpdId, fn($q) => $q->where('skpd_id', $skpdId))
-            ->when($deskripsi, fn($q, $d) => $q->where('deskripsi', 'ilike', '%' . trim($d) . '%'))
+            ->when($deskripsi, fn($q, $d) => $q->where('deskripsi', 'ilike', '%' . addcslashes(trim($d), '%_\\') . '%'))
             ->when($search, function ($q, $search) {
                 $trimmed = trim($search);
                 $digitsOnly = preg_replace('/\D/', '', $trimmed);
@@ -53,10 +53,12 @@ class VerifikasiController extends Controller
                     $q->where('nip', $encryptedNip);
                 } else {
                     // Jalur 2: Pencarian Teks / Deskriptif Non-Eksak (Nama, Nomor Referensi, Deskripsi)
-                    $q->where(function ($subQ) use ($trimmed) {
-                        $subQ->where('nama_lengkap', 'ilike', "%{$trimmed}%")
-                             ->orWhere('nomor_referensi', 'ilike', "%{$trimmed}%")
-                             ->orWhere('deskripsi', 'ilike', "%{$trimmed}%");
+                    // Dilakukan escaping pada karakter wildcard SQL (%, _, \) untuk mencegah wildcard injection
+                    $escaped = addcslashes($trimmed, '%_\\');
+                    $q->where(function ($subQ) use ($escaped) {
+                        $subQ->where('nama_lengkap', 'ilike', "%{$escaped}%")
+                             ->orWhere('nomor_referensi', 'ilike', "%{$escaped}%")
+                             ->orWhere('deskripsi', 'ilike', "%{$escaped}%");
                     });
                 }
             })

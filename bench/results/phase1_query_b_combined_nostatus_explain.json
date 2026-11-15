@@ -8,8 +8,8 @@
             "Total Cost": 2790.94,
             "Plan Rows": 15,
             "Plan Width": 2487,
-            "Actual Startup Time": 478.839,
-            "Actual Total Time": 539.863,
+            "Actual Startup Time": 99.88,
+            "Actual Total Time": 276.375,
             "Actual Rows": 1,
             "Actual Loops": 1,
             "Shared Hit Blocks": 3704,
@@ -34,11 +34,11 @@
                     "Total Cost": 5954,
                     "Plan Rows": 32,
                     "Plan Width": 2487,
-                    "Actual Startup Time": 478.837,
-                    "Actual Total Time": 539.86,
+                    "Actual Startup Time": 99.877,
+                    "Actual Total Time": 276.37,
                     "Actual Rows": 1,
                     "Actual Loops": 1,
-                    "Filter": "(((nama_lengkap)::text ~~* '%3274000000083335%'::text) OR ((nomor_referensi)::text ~~* '%3274000000083335%'::text) OR (deskripsi ~~* '%3274000000083335%'::text) OR ((nik)::text = 'vydaO8CDhLvIinm+8UMcx8nsqJA\/jgxSU+jOdTIHTVA='::text) OR ((nip)::text = 'vydaO8CDhLvIinm+8UMcx8nsqJA\/jgxSU+jOdTIHTVA='::text))",
+                    "Filter": "(((nama_lengkap)::text ~~* '%3274000000030001%'::text) OR ((nomor_referensi)::text ~~* '%3274000000030001%'::text) OR (deskripsi ~~* '%3274000000030001%'::text) OR ((nik)::text = 'LY7AuiGCoGuT76o6AJ8Yr1\/Wt44Hf2JXYZdVHc5BEk4='::text) OR ((nip)::text = 'LY7AuiGCoGuT76o6AJ8Yr1\/Wt44Hf2JXYZdVHc5BEk4='::text))",
                     "Rows Removed by Filter": 99999,
                     "Shared Hit Blocks": 3704,
                     "Shared Read Blocks": 0,
@@ -65,8 +65,8 @@
             "Temp Read Blocks": 0,
             "Temp Written Blocks": 0
         },
-        "Planning Time": 0.58,
+        "Planning Time": 0.636,
         "Triggers": [],
-        "Execution Time": 539.946
+        "Execution Time": 276.456
     }
 ]

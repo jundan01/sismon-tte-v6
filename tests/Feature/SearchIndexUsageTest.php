@@ -19,7 +19,7 @@ class SearchIndexUsageTest extends TestCase
     protected Skpd $skpd;
     protected string $sampleNik = '3274010101900001';
     protected string $sampleNip = '199001012020121001';
-    protected PendaftaranTte $record;
+    protected PendaftaranTte $activeRecord;
 
     protected function setUp(): void
     {
@@ -40,123 +40,233 @@ class SearchIndexUsageTest extends TestCase
             'is_active' => true,
         ]);
 
-        $this->record = PendaftaranTte::create([
+        // Pastikan tabel memiliki baseline baris yang cukup dan statistik optimizer up-to-date
+        // agar PostgreSQL memilih Index Scan secara natural TANPA 'enable_seqscan = off'
+        $existingCount = DB::table('pendaftaran_tte')->count();
+        if ($existingCount < 1000) {
+            $needed = 1200 - $existingCount;
+            DB::statement("
+                INSERT INTO pendaftaran_tte (uuid, nomor_referensi, nama_lengkap, nik, nip, no_hp, skpd_id, status, status_memiliki_email, is_email_recap_confirmed, tipe_pegawai, deskripsi)
+                SELECT gen_random_uuid(), 'REF-TEST-AUTO-' || i, 'Pegawai Auto ' || i, 'nik_auto_' || i, 'nip_auto_' || i, '08123', 1, 'MENUNGGU_VERIFIKASI', false, false, 'ASN', 'desc'
+                FROM generate_series(1, {$needed}) s(i);
+            ");
+            DB::statement('ANALYZE pendaftaran_tte;');
+        }
+
+        // Buat record aktif target pengujian
+        $this->activeRecord = PendaftaranTte::create([
             'uuid'                     => (string) Str::uuid(),
             'nomor_referensi'          => 'REF-INDEX-TEST-001',
-            'nama_lengkap'             => 'Pegawai Uji Indeks',
-            'nik'                      => $this->sampleNik, // Mutator mengenkripsi secara deterministik
-            'nip'                      => $this->sampleNip, // Mutator mengenkripsi secara deterministik
+            'nama_lengkap'             => 'Pegawai Uji Indeks Asli',
+            'nik'                      => $this->sampleNik,
+            'nip'                      => $this->sampleNip,
             'no_hp'                    => '081234567890',
             'skpd_id'                  => $this->skpd->id,
             'status'                   => 'MENUNGGU_VERIFIKASI',
             'status_memiliki_email'    => false,
             'is_email_recap_confirmed' => false,
             'tipe_pegawai'             => 'ASN',
-            'deskripsi'                => 'Pengujian indeks B-Tree',
+            'deskripsi'                => 'Pengujian indeks B-Tree alami',
         ]);
     }
 
     /**
-     * Uji 1: Memastikan query pencarian dengan input 16-digit (NIK) menggunakan partial index idx_pendaftaran_nik_active.
+     * Helper: Menangkap query SQL asli dari controller dan menjalankan EXPLAIN (FORMAT JSON)
      */
-    public function test_exact_nik_search_uses_partial_btree_index(): void
+    protected function explainControllerQuery(callable $action): array
     {
-        // Nonaktifkan sequential scan sementara pada sesi ini agar PostgreSQL membuktikan kelayakan indeks B-Tree
-        DB::statement('SET enable_seqscan = OFF');
+        $capturedQueries = [];
 
-        $encryptedNik = CryptoHelper::encryptField($this->sampleNik);
-        $quotedNik = DB::getPdo()->quote($encryptedNik);
+        DB::listen(function ($query) use (&$capturedQueries) {
+            $sqlLower = strtolower($query->sql);
+            if (str_contains($sqlLower, 'pendaftaran_tte') && str_contains($sqlLower, 'select') && !str_contains($sqlLower, 'count(')) {
+                $capturedQueries[] = [
+                    'sql'      => $query->sql,
+                    'bindings' => $query->bindings,
+                ];
+            }
+        });
 
-        $explainResults = DB::select("
-            EXPLAIN (FORMAT JSON)
-            SELECT id, nama_lengkap, nik, status
-            FROM pendaftaran_tte
-            WHERE status = 'MENUNGGU_VERIFIKASI'
-              AND nik = {$quotedNik}
-        ");
+        $action();
 
-        DB::statement('SET enable_seqscan = ON');
+        $this->assertNotEmpty($capturedQueries, 'Harus ada query SELECT ke pendaftaran_tte yang tereksekusi.');
 
-        $this->assertNotEmpty($explainResults);
-        $planJson = json_decode($explainResults[0]->{'QUERY PLAN'}, true);
-        $rootPlan = $planJson[0]['Plan'];
+        $targetQuery = end($capturedQueries);
+        $pdo = DB::getPdo();
+        $stmt = $pdo->prepare("EXPLAIN (FORMAT JSON) " . $targetQuery['sql']);
+        $stmt->execute($targetQuery['bindings']);
+        $rawJson = $stmt->fetchColumn();
 
-        $planString = json_encode($rootPlan);
-        $this->assertStringContainsString('Index Scan', $planString, 'Kueri harus menggunakan Index Scan.');
-        $this->assertStringContainsString('idx_pendaftaran_nik_active', $planString, 'Kueri harus menggunakan index idx_pendaftaran_nik_active.');
+        $planJson = json_decode($rawJson, true);
+        return [
+            'sql'      => $targetQuery['sql'],
+            'bindings' => $targetQuery['bindings'],
+            'plan'     => $planJson[0]['Plan'] ?? [],
+        ];
     }
 
     /**
-     * Uji 2: Memastikan query pencarian dengan input 18-digit (NIP) menggunakan partial index idx_pendaftaran_nip_active.
+     * Uji 1: Query SQL asli dari VerifikasiController untuk pencarian 16 digit NIK
+     * membuktikan pemanfaatan Index Scan secara alami tanpa enable_seqscan = off.
      */
-    public function test_exact_nip_search_uses_partial_btree_index(): void
+    public function test_verifikasi_controller_nik_search_generates_and_executes_index_scan(): void
     {
-        DB::statement('SET enable_seqscan = OFF');
+        $result = $this->explainControllerQuery(function () {
+            $response = $this->actingAs($this->superadmin)
+                ->getJson(route('admin.verifikasi.index', ['q' => $this->sampleNik]));
 
-        $encryptedNip = CryptoHelper::encryptField($this->sampleNip);
-        $quotedNip = DB::getPdo()->quote($encryptedNip);
+            $response->assertStatus(200);
+            $data = $response->json('data.data');
+            $this->assertNotEmpty($data, 'Data hasil pencarian NIK tidak boleh kosong.');
+            $this->assertEquals($this->activeRecord->id, $data[0]['id']);
+        });
 
-        $explainResults = DB::select("
-            EXPLAIN (FORMAT JSON)
-            SELECT id, nama_lengkap, nip, status
-            FROM pendaftaran_tte
-            WHERE status = 'MENUNGGU_VERIFIKASI'
-              AND nip = {$quotedNip}
-        ");
+        // Verifikasi query SQL terkompilasi Eloquent menggunakan parameter binding pada kolom nik
+        $this->assertStringContainsString('"nik" = ?', $result['sql']);
+        $this->assertStringNotContainsString('ilike', strtolower($result['sql']), 'Pencarian NIK tidak boleh memuat ILIKE.');
 
-        DB::statement('SET enable_seqscan = ON');
-
-        $this->assertNotEmpty($explainResults);
-        $planJson = json_decode($explainResults[0]->{'QUERY PLAN'}, true);
-        $rootPlan = $planJson[0]['Plan'];
-
-        $planString = json_encode($rootPlan);
-        $this->assertStringContainsString('Index Scan', $planString, 'Kueri harus menggunakan Index Scan.');
-        $this->assertStringContainsString('idx_pendaftaran_nip_active', $planString, 'Kueri harus menggunakan index idx_pendaftaran_nip_active.');
+        // Verifikasi rencana eksekusi database menggunakan Index Scan
+        $planString = json_encode($result['plan']);
+        $this->assertStringContainsString('Index Scan', $planString, 'Query asli VerifikasiController harus menggunakan Index Scan.');
+        $this->assertTrue(
+            str_contains($planString, 'idx_pendaftaran_nik_all') || str_contains($planString, 'idx_pendaftaran_nik_active'),
+            'Query harus memanfaatkan indeks NIK (idx_pendaftaran_nik_all atau idx_pendaftaran_nik_active).'
+        );
     }
 
     /**
-     * Uji 3: Memastikan VerifikasiController memisahkan rute 16-digit ke pencarian NIK dan berhasil menemukan data.
+     * Uji 2: Query SQL asli dari VerifikasiController untuk pencarian 18 digit NIP
+     * membuktikan pemanfaatan Index Scan secara alami tanpa enable_seqscan = off.
      */
-    public function test_verifikasi_controller_routes_16_digits_to_nik_exact_search(): void
+    public function test_verifikasi_controller_nip_search_generates_and_executes_index_scan(): void
     {
-        $response = $this->actingAs($this->superadmin)
-            ->getJson(route('admin.verifikasi.index', ['q' => $this->sampleNik]));
+        $result = $this->explainControllerQuery(function () {
+            $response = $this->actingAs($this->superadmin)
+                ->getJson(route('admin.verifikasi.index', ['q' => $this->sampleNip]));
 
-        $response->assertStatus(200);
-        $data = $response->json('data.data');
+            $response->assertStatus(200);
+            $data = $response->json('data.data');
+            $this->assertNotEmpty($data, 'Data hasil pencarian NIP tidak boleh kosong.');
+            $this->assertEquals($this->activeRecord->id, $data[0]['id']);
+        });
 
-        $this->assertNotEmpty($data, 'Data hasil pencarian NIK tidak boleh kosong.');
-        $this->assertEquals($this->record->id, $data[0]['id']);
+        $this->assertStringContainsString('"nip" = ?', $result['sql']);
+        $this->assertStringNotContainsString('ilike', strtolower($result['sql']));
+
+        $planString = json_encode($result['plan']);
+        $this->assertStringContainsString('Index Scan', $planString, 'Query asli VerifikasiController harus menggunakan Index Scan.');
+        $this->assertTrue(
+            str_contains($planString, 'idx_pendaftaran_nip_all') || str_contains($planString, 'idx_pendaftaran_nip_active'),
+            'Query harus memanfaatkan indeks NIP (idx_pendaftaran_nip_all atau idx_pendaftaran_nip_active).'
+        );
     }
 
     /**
-     * Uji 4: Memastikan VerifikasiController memisahkan rute 18-digit ke pencarian NIP dan berhasil menemukan data.
+     * Uji 3: Query SQL asli dari DashboardController untuk pencarian 16 digit NIK
+     * membuktikan pemanfaatan Index Scan secara alami.
      */
-    public function test_verifikasi_controller_routes_18_digits_to_nip_exact_search(): void
+    public function test_dashboard_controller_nik_search_generates_and_executes_index_scan(): void
     {
-        $response = $this->actingAs($this->superadmin)
-            ->getJson(route('admin.verifikasi.index', ['q' => $this->sampleNip]));
+        $result = $this->explainControllerQuery(function () {
+            $response = $this->actingAs($this->superadmin)
+                ->get(route('admin.dashboard', ['q' => $this->sampleNik]));
 
-        $response->assertStatus(200);
-        $data = $response->json('data.data');
+            $response->assertStatus(200);
+        });
 
-        $this->assertNotEmpty($data, 'Data hasil pencarian NIP tidak boleh kosong.');
-        $this->assertEquals($this->record->id, $data[0]['id']);
+        $this->assertStringContainsString('"nik" = ?', $result['sql']);
+
+        $planString = json_encode($result['plan']);
+        $this->assertStringContainsString('Index Scan', $planString, 'Query asli DashboardController harus menggunakan Index Scan.');
     }
 
     /**
-     * Uji 5: Memastikan VerifikasiController memisahkan rute teks (nama) ke wildcard text search.
+     * Uji 4: VerifikasiController memisahkan pencarian teks dan melakukan escaping wildcard SQL
      */
-    public function test_verifikasi_controller_routes_text_to_wildcard_search(): void
+    public function test_verifikasi_controller_routes_text_to_wildcard_with_escaping(): void
     {
-        $response = $this->actingAs($this->superadmin)
-            ->getJson(route('admin.verifikasi.index', ['q' => 'Uji Indeks']));
+        // Buat record khusus yang mengandung karakter spesial %, _, dan \
+        PendaftaranTte::create([
+            'uuid'                     => (string) Str::uuid(),
+            'nomor_referensi'          => 'REF-ESC-TEST-001',
+            'nama_lengkap'             => 'Pegawai 100% Valid_Escaped',
+            'nik'                      => '3274090909990003',
+            'no_hp'                    => '081234567892',
+            'skpd_id'                  => $this->skpd->id,
+            'status'                   => 'MENUNGGU_VERIFIKASI',
+            'status_memiliki_email'    => false,
+            'is_email_recap_confirmed' => false,
+            'tipe_pegawai'             => 'ASN',
+            'deskripsi'                => 'Uji escaping wildcard',
+        ]);
 
-        $response->assertStatus(200);
-        $data = $response->json('data.data');
+        $result = $this->explainControllerQuery(function () {
+            // Pencarian dengan karakter wildcard SQL: %, _, dan \
+            $response = $this->actingAs($this->superadmin)
+                ->getJson(route('admin.verifikasi.index', ['q' => '100% Valid_Escaped']));
 
-        $this->assertNotEmpty($data, 'Data hasil pencarian nama tidak boleh kosong.');
-        $this->assertEquals($this->record->id, $data[0]['id']);
+            $response->assertStatus(200);
+            $data = $response->json('data.data');
+            $this->assertNotEmpty($data, 'Data hasil pencarian teks escaping harus ditemukan.');
+        });
+
+        $sql = strtolower($result['sql']);
+        $this->assertStringContainsString('ilike', $sql, 'Query teks harus menggunakan ILIKE.');
+        $this->assertStringNotContainsString('"nik" = ?', $sql, 'Query teks tidak boleh mencampur equality nik.');
+        $this->assertStringNotContainsString('"nip" = ?', $sql, 'Query teks tidak boleh mencampur equality nip.');
+
+        // Verifikasi bahwa karakter wildcard berhasil di-escape dalam binding
+        $bindings = $result['bindings'];
+        $hasEscapedBinding = false;
+        foreach ($bindings as $b) {
+            if (is_string($b) && str_contains($b, '100\% Valid\_Escaped')) {
+                $hasEscapedBinding = true;
+                break;
+            }
+        }
+        $this->assertTrue($hasEscapedBinding, 'Binding ILIKE harus meng-escape karakter % dan _ dengan backslash.');
+    }
+
+    /**
+     * Uji 5: Rekaman dengan status DITOLAK tetap terindeks dan menggunakan Index Scan (idx_pendaftaran_nik_all)
+     */
+    public function test_rejected_status_is_indexed_and_uses_index_scan(): void
+    {
+        $rejectedNik = '3274090909990002';
+        $record = PendaftaranTte::create([
+            'uuid'                     => (string) Str::uuid(),
+            'nomor_referensi'          => 'REF-REJECT-TEST-002',
+            'nama_lengkap'             => 'Pegawai Berstatus Ditolak',
+            'nik'                      => $rejectedNik,
+            'nip'                      => '199501012020121002',
+            'no_hp'                    => '081234567891',
+            'skpd_id'                  => $this->skpd->id,
+            'status'                   => 'DITOLAK',
+            'status_memiliki_email'    => false,
+            'is_email_recap_confirmed' => false,
+            'tipe_pegawai'             => 'ASN',
+            'deskripsi'                => 'Pengujian indeks pada data ditolak',
+        ]);
+
+        $result = $this->explainControllerQuery(function () use ($rejectedNik, $record) {
+            $response = $this->actingAs($this->superadmin)
+                ->getJson(route('admin.verifikasi.index', ['status' => 'DITOLAK', 'q' => $rejectedNik]));
+
+            $response->assertStatus(200);
+            $data = $response->json('data.data');
+            $this->assertNotEmpty($data, 'Data berstatus DITOLAK harus dapat ditemukan.');
+            $this->assertEquals('DITOLAK', $data[0]['status']);
+            $this->assertEquals($record->id, $data[0]['id']);
+        });
+
+        $planString = json_encode($result['plan']);
+        $this->assertStringContainsString('Index Scan', $planString, 'Data DITOLAK harus menggunakan Index Scan.');
+
+        // Uji query langsung pada NIK tanpa status filter untuk membuktikan index idx_pendaftaran_nik_all bekerja mulus
+        $encryptedNik = CryptoHelper::encryptField($rejectedNik);
+        $explainDirect = DB::select("EXPLAIN (FORMAT JSON) SELECT id, nama_lengkap, nik, status FROM pendaftaran_tte WHERE nik = ?", [$encryptedNik]);
+        $directPlanString = json_encode(json_decode($explainDirect[0]->{'QUERY PLAN'}, true));
+        $this->assertStringContainsString('Index Scan', $directPlanString);
+        $this->assertStringContainsString('idx_pendaftaran_nik_all', $directPlanString, 'Pencarian NIK tanpa filter status harus memanfaatkan idx_pendaftaran_nik_all.');
     }
 }

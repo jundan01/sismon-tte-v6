@@ -95,6 +95,26 @@ services:
     cpus: 1.50
     mem_limit: 1024m
 
+  # 3b. POSTGRESQL 16 BENCHMARK ENGINE (ISOLATED DEDICATED CONTAINER)
+  postgres_bench:
+    image: postgres:16-alpine
+    container_name: tte_postgres_bench
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:5433:5432"
+    environment:
+      POSTGRES_DB: tte_benchmark
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: secret
+    volumes:
+      - pg_bench_data:/var/lib/postgresql/data
+    networks:
+      - backend
+    security_opt:
+      - "no-new-privileges:true"
+    cpus: 1.50
+    mem_limit: 1024m
+
   # 4. REDIS 7 BUFFER & EVENT QUEUE
   redis:
     image: redis:7-alpine
@@ -145,6 +165,7 @@ networks:
 
 volumes:
   pg_data:
+  pg_bench_data:
   redis_data:
   storage_data:
 

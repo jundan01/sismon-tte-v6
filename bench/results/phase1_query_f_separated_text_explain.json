@@ -8,8 +8,8 @@
             "Total Cost": 5434.42,
             "Plan Rows": 10,
             "Plan Width": 2487,
-            "Actual Startup Time": 113.221,
-            "Actual Total Time": 129.388,
+            "Actual Startup Time": 181.104,
+            "Actual Total Time": 181.459,
             "Actual Rows": 1,
             "Actual Loops": 1,
             "Shared Hit Blocks": 3778,
@@ -32,8 +32,8 @@
                     "Total Cost": 5434.42,
                     "Plan Rows": 10,
                     "Plan Width": 2487,
-                    "Actual Startup Time": 113.219,
-                    "Actual Total Time": 129.384,
+                    "Actual Startup Time": 181.102,
+                    "Actual Total Time": 181.456,
                     "Actual Rows": 1,
                     "Actual Loops": 1,
                     "Workers Planned": 2,
@@ -58,8 +58,8 @@
                             "Total Cost": 4433.24,
                             "Plan Rows": 5,
                             "Plan Width": 2487,
-                            "Actual Startup Time": 98.303,
-                            "Actual Total Time": 98.304,
+                            "Actual Startup Time": 169.451,
+                            "Actual Total Time": 169.452,
                             "Actual Rows": 0,
                             "Actual Loops": 3,
                             "Sort Key": [
@@ -104,11 +104,11 @@
                                     "Total Cost": 4433.17,
                                     "Plan Rows": 5,
                                     "Plan Width": 2487,
-                                    "Actual Startup Time": 75.822,
-                                    "Actual Total Time": 96.673,
+                                    "Actual Startup Time": 126.809,
+                                    "Actual Total Time": 160.976,
                                     "Actual Rows": 0,
                                     "Actual Loops": 3,
-                                    "Filter": "(((status)::text = 'MENUNGGU_VERIFIKASI'::text) AND (((nama_lengkap)::text ~~* '%Pegawai Simulasi Ke-50000%'::text) OR ((nomor_referensi)::text ~~* '%50000%'::text)))",
+                                    "Filter": "(((status)::text = 'MENUNGGU_VERIFIKASI'::text) AND (((nama_lengkap)::text ~~* '%Pegawai Simulasi Ke-30001%'::text) OR ((nomor_referensi)::text ~~* '%REF-BENCH-00030001%'::text)))",
                                     "Rows Removed by Filter": 33333,
                                     "Shared Hit Blocks": 3704,
                                     "Shared Read Blocks": 0,
@@ -140,8 +140,8 @@
             "Temp Read Blocks": 0,
             "Temp Written Blocks": 0
         },
-        "Planning Time": 0.369,
+        "Planning Time": 0.363,
         "Triggers": [],
-        "Execution Time": 129.505
+        "Execution Time": 181.576
     }
 ]

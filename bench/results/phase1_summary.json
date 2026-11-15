@@ -1,56 +1,116 @@
-[
-    {
-        "Scenario": "phase1_query_a_combined",
-        "Primary Scan": "Seq Scan",
-        "Index Used": "None (Seq Scan)",
-        "Exec Time (ms)": "200.236",
-        "Plan Time (ms)": "0.798",
-        "Shared Hit": 3778,
-        "Shared Read": 0
+{
+    "pg_environment": {
+        "pg_version": "PostgreSQL 16.15 on x86_64-pc-linux-musl, compiled by gcc (Alpine 15.2.0) 15.2.0, 64-bit",
+        "shared_buffers": "128MB",
+        "work_mem": "4MB",
+        "effective_cache_size": "4GB",
+        "random_page_cost": "4"
     },
-    {
-        "Scenario": "phase1_query_b_combined_nostatus",
-        "Primary Scan": "Seq Scan",
-        "Index Used": "None (Seq Scan)",
-        "Exec Time (ms)": "539.946",
-        "Plan Time (ms)": "0.580",
-        "Shared Hit": 3704,
-        "Shared Read": 0
-    },
-    {
-        "Scenario": "phase1_query_c_separated_nik_status",
-        "Primary Scan": "Index Scan",
-        "Index Used": "idx_pendaftaran_nik_active",
-        "Exec Time (ms)": "0.183",
-        "Plan Time (ms)": "0.144",
-        "Shared Hit": 4,
-        "Shared Read": 0
-    },
-    {
-        "Scenario": "phase1_query_d_separated_nik_active",
-        "Primary Scan": "Index Scan",
-        "Index Used": "idx_pendaftaran_nik_active",
-        "Exec Time (ms)": "0.121",
-        "Plan Time (ms)": "0.255",
-        "Shared Hit": 4,
-        "Shared Read": 0
-    },
-    {
-        "Scenario": "phase1_query_e_separated_nip_status",
-        "Primary Scan": "Index Scan",
-        "Index Used": "idx_pendaftaran_nip_active",
-        "Exec Time (ms)": "0.487",
-        "Plan Time (ms)": "0.169",
-        "Shared Hit": 4,
-        "Shared Read": 0
-    },
-    {
-        "Scenario": "phase1_query_f_separated_text",
-        "Primary Scan": "Seq Scan",
-        "Index Used": "None (Seq Scan)",
-        "Exec Time (ms)": "129.505",
-        "Plan Time (ms)": "0.369",
-        "Shared Hit": 3778,
-        "Shared Read": 0
-    }
-]
+    "dataset_records": 100000,
+    "summary_table": [
+        {
+            "Query ID": "Query A",
+            "Scenario Key": "phase1_query_a_combined",
+            "Primary Scan": "Seq Scan",
+            "Index Used": "None (Seq Scan)",
+            "Median (ms)": "409.379",
+            "Mean (ms)": "387.770",
+            "Min (ms)": "254.669",
+            "Max (ms)": "491.358",
+            "Plan Time (ms)": "0.838",
+            "Shared Hit": 15038,
+            "Shared Read": 0
+        },
+        {
+            "Query ID": "Query B",
+            "Scenario Key": "phase1_query_b_combined_nostatus",
+            "Primary Scan": "Seq Scan",
+            "Index Used": "None (Seq Scan)",
+            "Median (ms)": "276.456",
+            "Mean (ms)": "276.533",
+            "Min (ms)": "252.123",
+            "Max (ms)": "307.204",
+            "Plan Time (ms)": "0.339",
+            "Shared Hit": 7408,
+            "Shared Read": 0
+        },
+        {
+            "Query ID": "Query C",
+            "Scenario Key": "phase1_query_c_separated_nik_status",
+            "Primary Scan": "Index Scan",
+            "Index Used": "idx_pendaftaran_nik_all",
+            "Median (ms)": "0.168",
+            "Mean (ms)": "0.189",
+            "Min (ms)": "0.127",
+            "Max (ms)": "0.334",
+            "Plan Time (ms)": "0.178",
+            "Shared Hit": 8,
+            "Shared Read": 0
+        },
+        {
+            "Query ID": "Query D",
+            "Scenario Key": "phase1_query_d_separated_nik_active",
+            "Primary Scan": "Index Scan",
+            "Index Used": "idx_pendaftaran_nik_active",
+            "Median (ms)": "0.149",
+            "Mean (ms)": "0.164",
+            "Min (ms)": "0.111",
+            "Max (ms)": "0.248",
+            "Plan Time (ms)": "0.183",
+            "Shared Hit": 8,
+            "Shared Read": 0
+        },
+        {
+            "Query ID": "Query E",
+            "Scenario Key": "phase1_query_e_separated_nip_status",
+            "Primary Scan": "Index Scan",
+            "Index Used": "idx_pendaftaran_nip_all",
+            "Median (ms)": "0.132",
+            "Mean (ms)": "0.137",
+            "Min (ms)": "0.123",
+            "Max (ms)": "0.158",
+            "Plan Time (ms)": "0.158",
+            "Shared Hit": 8,
+            "Shared Read": 0
+        },
+        {
+            "Query ID": "Query F",
+            "Scenario Key": "phase1_query_f_separated_text",
+            "Primary Scan": "Seq Scan",
+            "Index Used": "None (Seq Scan)",
+            "Median (ms)": "181.576",
+            "Mean (ms)": "170.589",
+            "Min (ms)": "106.332",
+            "Max (ms)": "264.385",
+            "Plan Time (ms)": "0.306",
+            "Shared Hit": 15038,
+            "Shared Read": 0
+        },
+        {
+            "Query ID": "Query G",
+            "Scenario Key": "phase1_query_g_separated_nik_all_status",
+            "Primary Scan": "Index Scan",
+            "Index Used": "idx_pendaftaran_nik_all",
+            "Median (ms)": "0.145",
+            "Mean (ms)": "0.159",
+            "Min (ms)": "0.124",
+            "Max (ms)": "0.236",
+            "Plan Time (ms)": "0.140",
+            "Shared Hit": 8,
+            "Shared Read": 0
+        },
+        {
+            "Query ID": "Query H",
+            "Scenario Key": "phase1_query_h_combined_nik_nip",
+            "Primary Scan": "Bitmap Heap Scan",
+            "Index Used": "idx_pendaftaran_nik_all & idx_pendaftaran_nip_all",
+            "Median (ms)": "0.192",
+            "Mean (ms)": "0.219",
+            "Min (ms)": "0.175",
+            "Max (ms)": "0.305",
+            "Plan Time (ms)": "0.146",
+            "Shared Hit": 26,
+            "Shared Read": 0
+        }
+    ]
+}

@@ -8,8 +8,8 @@
             "Total Cost": 5747.56,
             "Plan Rows": 15,
             "Plan Width": 2487,
-            "Actual Startup Time": 196.972,
-            "Actual Total Time": 199.494,
+            "Actual Startup Time": 392.566,
+            "Actual Total Time": 409.248,
             "Actual Rows": 1,
             "Actual Loops": 1,
             "Shared Hit Blocks": 3778,
@@ -32,8 +32,8 @@
                     "Total Cost": 5747.68,
                     "Plan Rows": 16,
                     "Plan Width": 2487,
-                    "Actual Startup Time": 196.971,
-                    "Actual Total Time": 199.489,
+                    "Actual Startup Time": 392.564,
+                    "Actual Total Time": 409.244,
                     "Actual Rows": 1,
                     "Actual Loops": 1,
                     "Workers Planned": 2,
@@ -58,8 +58,8 @@
                             "Total Cost": 4745.81,
                             "Plan Rows": 8,
                             "Plan Width": 2487,
-                            "Actual Startup Time": 180.264,
-                            "Actual Total Time": 180.265,
+                            "Actual Startup Time": 370.95,
+                            "Actual Total Time": 370.952,
                             "Actual Rows": 0,
                             "Actual Loops": 3,
                             "Sort Key": [
@@ -104,11 +104,11 @@
                                     "Total Cost": 4745.67,
                                     "Plan Rows": 8,
                                     "Plan Width": 2487,
-                                    "Actual Startup Time": 172.947,
-                                    "Actual Total Time": 179.684,
+                                    "Actual Startup Time": 275.612,
+                                    "Actual Total Time": 369.303,
                                     "Actual Rows": 0,
                                     "Actual Loops": 3,
-                                    "Filter": "(((status)::text = 'MENUNGGU_VERIFIKASI'::text) AND (((nama_lengkap)::text ~~* '%3274000000083335%'::text) OR ((nomor_referensi)::text ~~* '%3274000000083335%'::text) OR (deskripsi ~~* '%3274000000083335%'::text) OR ((nik)::text = 'vydaO8CDhLvIinm+8UMcx8nsqJA\/jgxSU+jOdTIHTVA='::text) OR ((nip)::text = 'vydaO8CDhLvIinm+8UMcx8nsqJA\/jgxSU+jOdTIHTVA='::text)))",
+                                    "Filter": "(((status)::text = 'MENUNGGU_VERIFIKASI'::text) AND (((nama_lengkap)::text ~~* '%3274000000030001%'::text) OR ((nomor_referensi)::text ~~* '%3274000000030001%'::text) OR (deskripsi ~~* '%3274000000030001%'::text) OR ((nik)::text = 'LY7AuiGCoGuT76o6AJ8Yr1\/Wt44Hf2JXYZdVHc5BEk4='::text) OR ((nip)::text = 'LY7AuiGCoGuT76o6AJ8Yr1\/Wt44Hf2JXYZdVHc5BEk4='::text)))",
                                     "Rows Removed by Filter": 33333,
                                     "Shared Hit Blocks": 3704,
                                     "Shared Read Blocks": 0,
@@ -129,7 +129,7 @@
             ]
         },
         "Planning": {
-            "Shared Hit Blocks": 11,
+            "Shared Hit Blocks": 0,
             "Shared Read Blocks": 0,
             "Shared Dirtied Blocks": 0,
             "Shared Written Blocks": 0,
@@ -140,8 +140,8 @@
             "Temp Read Blocks": 0,
             "Temp Written Blocks": 0
         },
-        "Planning Time": 0.798,
+        "Planning Time": 0.387,
         "Triggers": [],
-        "Execution Time": 200.236
+        "Execution Time": 409.379
     }
 ]

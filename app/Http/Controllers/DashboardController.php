@@ -61,10 +61,12 @@ class DashboardController extends Controller
                 $recentAntrianQuery->where('nip', $encryptedNip);
             } else {
                 // Jalur 2: Pencarian Teks / Deskriptif Non-Eksak
-                $recentAntrianQuery->where(function ($q) use ($trimmed) {
-                    $q->where('deskripsi', 'ilike', "%{$trimmed}%")
-                      ->orWhere('nama_lengkap', 'ilike', "%{$trimmed}%")
-                      ->orWhere('nomor_referensi', 'ilike', "%{$trimmed}%");
+                // Dilakukan escaping pada karakter wildcard SQL (%, _, \) untuk mencegah wildcard injection
+                $escaped = addcslashes($trimmed, '%_\\');
+                $recentAntrianQuery->where(function ($q) use ($escaped) {
+                    $q->where('deskripsi', 'ilike', "%{$escaped}%")
+                      ->orWhere('nama_lengkap', 'ilike', "%{$escaped}%")
+                      ->orWhere('nomor_referensi', 'ilike', "%{$escaped}%");
                 });
             }
         }
