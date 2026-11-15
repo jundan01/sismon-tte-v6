@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Layanan Tanda Tangan Elektronik (TTE) — Pemerintah Kota Cirebon</title>
+    
+    <!-- Tailwind CSS via Official CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        crb: {
+                            blue: '#0f62fe',
+                            hover: '#0353e9',
+                            dark: '#0f172a',
+                            darker: '#090d16',
+                            surface: '#f8fafc',
+                            border: '#e2e8f0',
+                            success: '#16a34a',
+                            warning: '#ca8a04',
+                            danger: '#dc2626'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['IBM Plex Sans', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+                        mono: ['IBM Plex Mono', 'Consolas', 'Courier New', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Google Fonts: IBM Plex Sans & Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'IBM Plex Sans', sans-serif;
+        }
+        .font-mono {
+            font-family: 'IBM Plex Mono', monospace;
+        }
+        .bg-grid-pattern {
+            background-image: 
+                linear-gradient(to right, rgba(15, 98, 254, 0.08) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(15, 98, 254, 0.08) 1px, transparent 1px);
+            background-size: 36px 36px;
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        @media print {
+            .no-print { display: none !important; }
+            .print-only { display: block !important; }
+            body { background: #fff !important; }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased selection:bg-blue-600 selection:text-white">
+
+    <!-- ── 1. HEADER & TOPBAR NAVIGATION (BERSIH DARI LOGIN SUPERADMIN) ── -->
+    <header class="sticky top-0 z-50 bg-slate-950 border-b-2 border-blue-600 text-white shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-18 py-3">
+                <!-- Branding Instansi -->
+                <a href="#hero" class="flex items-center space-x-3.5 group">
+                    <div class="w-10 h-10 bg-blue-600 flex items-center justify-center font-bold text-white text-lg tracking-wider shadow-sm">
+                        CRB
+                    </div>
+                    <div>
+                        <div class="text-sm font-bold tracking-wide uppercase text-white leading-tight group-hover:text-blue-400 transition">
+                            Pemerintah Kota Cirebon
+                        </div>
+                        <div class="text-xs text-slate-400">
+                            Dinas Komunikasi dan Informatika · Bidang Persandian
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Desktop Navigation Menu -->
+                <nav class="hidden md:flex items-center space-x-6 text-sm font-medium text-slate-300">
+                    <a href="#hero" class="hover:text-white hover:underline transition">Beranda</a>
+                    <a href="#macro-capaian" class="hover:text-white hover:underline transition">Capaian SKPD</a>
+                    <a href="#akses-pendaftaran" class="hover:text-white hover:underline transition text-blue-400 font-semibold">Pendaftaran TTE</a>
+                    <a href="#panduan-layanan" class="hover:text-white hover:underline transition">Panduan Pegawai</a>
+                    <a href="#layanan-kunjungan" class="hover:text-white hover:underline transition">Layanan Kunjungan</a>
+                    <a href="#faq" class="hover:text-white hover:underline transition">Bantuan & FAQ</a>
+                </nav>
+
+                <!-- DUA TOMBOL DAFTAR DI HEADER: ASN & NON-ASN -->
+                <div class="flex items-center space-x-2">
+                    <a href="pendaftaran_tte_cirebon.html?kategori=asn" class="inline-flex items-center space-x-1.5 bg-blue-600 hover:bg-blue-700 text-white px-3.5 py-2 text-xs sm:text-sm font-semibold shadow-xs transition active:scale-95" title="Buka Formulir Pendaftaran Pegawai ASN (PNS/PPPK)">
+                        <span>🏛️ Daftar ASN</span>
+                    </a>
+                    <a href="pendaftaran_tte_cirebon.html?kategori=non-asn" class="inline-flex items-center space-x-1.5 bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 px-3.5 py-2 text-xs sm:text-sm font-semibold shadow-xs transition active:scale-95" title="Buka Formulir Pendaftaran Non-ASN (Tanpa NIP)">
+                        <span>💼 Daftar Non-ASN</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ── 2. HERO SECTION ────────────────────────────────────────── -->
+    <section id="hero" class="relative bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-white overflow-hidden py-16 sm:py-24 border-b border-slate-800">
+        <!-- Subtle Grid Pattern Overlay -->
+        <div class="absolute inset-0 bg-grid-pattern opacity-60 pointer-events-none"></div>
+
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="max-w-3xl">
+                <!-- Eyebrow Badge -->
+                <div class="inline-flex items-center space-x-2 bg-blue-950/80 border border-blue-500/50 px-3.5 py-1 text-xs font-semibold text-blue-300 tracking-wider uppercase mb-6">
+                    <span class="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></span>
+                    <span>Sistem Resmi Persandian & Sertifikasi Elektronik</span>
+                </div>
+
+                <!-- Main Headline -->
+                <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-white leading-tight mb-6">
+                    Layanan Tanda Tangan Elektronik Sah, Akuntabel & Bebas Kertas
+                </h1>
+
+                <!-- Subheadline -->
+                <p class="text-base sm:text-lg text-slate-300 leading-relaxed mb-8">
+                    Portal terpadu sertifikasi digital bagi seluruh aparatur Pemerintah Kota Cirebon. Menyediakan akses pendaftaran terpisah bagi <strong>Pegawai ASN (dengan NIP)</strong> dan <strong>Pegawai Non-ASN (belum mempunyai NIP)</strong>, transparansi capaian se-kota, serta fasilitasi kunjungan teknis on-site ke kantor instansi Anda.
+                </p>
+
+                <!-- DUA TOMBOL CALL TO ACTION UTAMA MENONJOL KE HALAMAN TERPISAH -->
+                <div class="flex flex-col sm:flex-row items-stretch sm:items-center space-y-3 sm:space-y-0 sm:space-x-4 mb-10">
+                    <!-- TOMBOL 1: PENDAFTARAN ASN -->
+                    <a href="pendaftaran_tte_cirebon.html?kategori=asn" class="inline-flex items-center justify-center space-x-2 bg-blue-600 hover:bg-blue-500 text-white px-6 py-3.5 text-sm sm:text-base font-bold shadow-lg shadow-blue-900/30 transition active:scale-95 text-center">
+                        <span>🏛️ Buka Formulir Pendaftaran ASN (Dengan NIP)</span>
+                        <span class="text-lg leading-none">→</span>
+                    </a>
+
+                    <!-- TOMBOL 2: PENDAFTARAN NON-ASN -->
+                    <a href="pendaftaran_tte_cirebon.html?kategori=non-asn" class="inline-flex items-center justify-center space-x-2 bg-slate-800 hover:bg-slate-700 text-slate-100 border border-slate-700 px-6 py-3.5 text-sm sm:text-base font-semibold transition text-center">
+                        <span>💼 Buka Formulir Non-ASN (Tanpa NIP)</span>
+                        <span class="text-lg leading-none">→</span>
+                    </a>
+                </div>
+
+                <!-- Trust Badges & Compliance Bar -->
+                <div class="pt-6 border-t border-slate-800 flex flex-wrap items-center gap-y-3 gap-x-6 text-xs text-slate-400 font-medium">
+                    <div class="flex items-center space-x-2">
+                        <span class="text-blue-500 font-bold">✓</span>
+                        <span>Otoritas Sertifikasi: Balai Sertifikasi Elektronik (BSrE BSSN)</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <span class="text-blue-500 font-bold">✓</span>
+                        <span>Kekuatan Hukum Sah: UU ITE No. 1/2024 & Perpres SPBE</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <span class="text-blue-500 font-bold">✓</span>
+                        <span>Kriptografi Aman: AES-256 & Naskah Dinas Digital</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── 3. DATA AGREGAT CAPAIAN SKPD (MACRO VIEW) ──────────────── -->
+    <section id="macro-capaian" class="py-16 sm:py-20 bg-slate-100 border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="max-w-3xl mb-12">
+                <span class="text-xs font-bold uppercase tracking-wider text-blue-600 bg-blue-50 border border-blue-200 px-2.5 py-1">
+                    Transparansi Kinerja SPBE
+                </span>
+                <h2 class="text-2xl sm:text-4xl font-bold tracking-tight text-slate-900 mt-3 mb-3">
+                    Visualisasi Data Agregat Capaian TTE se-Kota Cirebon
+                </h2>
+                <p class="text-slate-600 text-sm sm:text-base leading-relaxed">
+                    Pemantauan makro kepemilikan dan pemanfaatan sertifikat elektronik pada seluruh Perangkat Daerah (SKPD) aktif di Kota Cirebon secara transparan dan akuntabel.
+                </p>
+            </div>
+
+            <!-- Top 4 KPI Metrics Card Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                <div class="bg-white p-6 border border-slate-200 shadow-sm flex flex-col justify-between">
+                    <div class="flex items-center justify-between text-slate-500 mb-2">
+                        <span class="text-xs font-semibold uppercase tracking-wider">Target ASN Kota</span>
+                        <span class="text-lg">👥</span>
+                    </div>
+                    <div class="text-3xl font-extrabold font-mono text-slate-900" id="statTargetAsn">1.200</div>
+                    <div class="text-xs text-slate-500 mt-2">Total aparatur pada 20 Perangkat Daerah aktif</div>
+                </div>
+
+                <div class="bg-white p-6 border border-slate-200 shadow-sm flex flex-col justify-between">
+                    <div class="flex items-center justify-between text-slate-500 mb-2">
+                        <span class="text-xs font-semibold uppercase tracking-wider">Permohonan Masuk</span>
+                        <span class="text-lg">📋</span>
+                    </div>
+                    <div class="text-3xl font-extrabold font-mono text-blue-600" id="statPendaftar">50</div>
+                    <div class="text-xs text-slate-500 mt-2"><span id="statDisetujui">30</span> berkas telah diverifikasi resmi</div>
+                </div>
+
+                <div class="bg-white p-6 border border-slate-200 shadow-sm flex flex-col justify-between">
+                    <div class="flex items-center justify-between text-slate-500 mb-2">
+                        <span class="text-xs font-semibold uppercase tracking-wider">Sertifikat Aktif</span>
+                        <span class="text-lg">🛡️</span>
+                    </div>
+                    <div class="text-3xl font-extrabold font-mono text-emerald-600" id="statAktif">12</div>
+                    <div class="text-xs text-slate-500 mt-2">Sertifikat digital BSrE aktif beroperasi</div>
+                </div>
+
+                <div class="bg-white p-6 border-l-4 border-l-blue-600 border border-slate-200 shadow-sm flex flex-col justify-between">
+                    <div class="flex items-center justify-between text-slate-500 mb-2">
+                        <span class="text-xs font-semibold uppercase tracking-wider">Capaian Adopsi Kota</span>
+                        <span class="text-lg">📈</span>
+                    </div>
+                    <div class="text-3xl font-extrabold font-mono text-blue-700" id="statPersentaseKota">41.7%</div>
+                    <div class="text-xs text-slate-500 mt-2">Rasio kumulatif penetrasi TTE ASN</div>
+                </div>
+            </div>
+
+            <!-- City-Wide Macro Progress Bar Widget -->
+            <div class="bg-white p-6 border border-slate-200 shadow-sm mb-8">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-3 gap-2">
+                    <div>
+                        <h3 class="text-sm font-bold uppercase tracking-wider text-slate-800">Progres Penetrasi Sertifikat Elektronik se-Kota Cirebon</h3>
+                        <p class="text-xs text-slate-500">Realisasi permohonan terhadap total target pegawai terdata</p>
+                    </div>
+                    <div class="text-lg font-mono font-bold text-blue-600" id="macroBarPercentText">41.7%</div>
+                </div>
+
+                <div class="w-full bg-slate-100 h-4 overflow-hidden border border-slate-200">
+                    <div id="macroBarFill" class="bg-gradient-to-r from-blue-600 to-indigo-600 h-full transition-all duration-700" style="width: 41.7%;"></div>
+                </div>
+
+                <div class="flex flex-wrap items-center justify-between text-xs text-slate-600 mt-3 pt-2 border-t border-slate-100">
+                    <div class="flex items-center space-x-4">
+                        <span><strong class="text-blue-600">■</strong> Realisasi Terdaftar: <strong id="lblRealisasi">50 Pegawai</strong></span>
+                        <span><strong class="text-slate-400">■</strong> Target Total: <strong id="lblTarget">1.200 Pegawai</strong></span>
+                    </div>
+                    <div class="text-slate-400 italic">Pembaruan data otomatis sinkronisasi Redis sub-ms</div>
+                </div>
+            </div>
+
+            <!-- Trio Status Kepatuhan SKPD -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                <div class="bg-white border-l-4 border-l-emerald-600 border border-slate-200 p-5 shadow-sm">
+                    <div class="flex items-center justify-between mb-1">
+                        <span class="text-xs font-bold uppercase tracking-wider text-emerald-700">Kategori Optimal (≥ 80%)</span>
+                        <span class="font-mono text-xl font-bold text-slate-900" id="badgeCountOptimal">2 SKPD</span>
+                    </div>
+                    <p class="text-xs text-slate-600 leading-relaxed">Instansi dengan tingkat adopsi TTE sangat tinggi dan siap 100% SPBE tanpa kertas.</p>
+                </div>
+
+                <div class="bg-white border-l-4 border-l-blue-600 border border-slate-200 p-5 shadow-sm">
+                    <div class="flex items-center justify-between mb-1">
+                        <span class="text-xs font-bold uppercase tracking-wider text-blue-700">Kategori Progresif (50% – 79%)</span>
+                        <span class="font-mono text-xl font-bold text-slate-900" id="badgeCountProgresif">6 SKPD</span>
+                    </div>
+                    <p class="text-xs text-slate-600 leading-relaxed">Instansi yang telah mencakup mayoritas personil dan dalam tahap verifikasi akhir.</p>
+                </div>
+
+                <div class="bg-white border-l-4 border-l-amber-500 border border-slate-200 p-5 shadow-sm">
+                    <div class="flex items-center justify-between mb-1">
+                        <span class="text-xs font-bold uppercase tracking-wider text-amber-700">Kategori Akselerasi (&lt; 50%)</span>
+                        <span class="font-mono text-xl font-bold text-slate-900" id="badgeCountAkselerasi">12 SKPD</span>
+                    </div>
+                    <p class="text-xs text-slate-600 leading-relaxed">Instansi prioritas yang disarankan memanfaatkan <strong>Layanan Kunjungan On-Site</strong>.</p>
+                </div>
+            </div>
+
+            <!-- SKPD Interactive Comparison Table & Search Explorer -->
+            <div class="bg-white border border-slate-200 shadow-sm overflow-hidden">
+                <div class="p-4 bg-slate-50 border-b border-slate-200 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+                    <div class="relative flex-1">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">🔍</span>
+                        <input type="text" id="skpdSearchInput" placeholder="Cari Perangkat Daerah (SKPD) atau kode instansi..." 
+                               class="w-full pl-9 pr-4 py-2 text-sm bg-white border border-slate-300 focus:outline-none focus:border-blue-600 transition" 
+                               oninput="filterSkpdTable()">
+                    </div>
+
+                    <div class="flex items-center space-x-1.5 overflow-x-auto pb-1 md:pb-0">
+                        <button type="button" class="filter-tab-btn active px-3 py-1.5 text-xs font-semibold uppercase tracking-wider bg-slate-900 text-white" onclick="setCategoryFilter('semua', this)">Semua (<span id="totalSkpdCount">20</span>)</button>
+                        <button type="button" class="filter-tab-btn px-3 py-1.5 text-xs font-semibold uppercase tracking-wider bg-white text-slate-700 border border-slate-300 hover:bg-slate-100" onclick="setCategoryFilter('optimal', this)">Optimal</button>
+                        <button type="button" class="filter-tab-btn px-3 py-1.5 text-xs font-semibold uppercase tracking-wider bg-white text-slate-700 border border-slate-300 hover:bg-slate-100" onclick="setCategoryFilter('progresif', this)">Progresif</button>
+                        <button type="button" class="filter-tab-btn px-3 py-1.5 text-xs font-semibold uppercase tracking-wider bg-white text-slate-700 border border-slate-300 hover:bg-slate-100" onclick="setCategoryFilter('akselerasi', this)">Akselerasi</button>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto max-h-[540px]">
+                    <table class="w-full text-left text-sm text-slate-700 border-collapse">
+                        <thead class="bg-slate-50 text-xs font-bold text-slate-500 uppercase tracking-wider sticky top-0 border-b border-slate-200 z-10">
+                            <tr>
+                                <th class="py-3 px-4 w-12 text-center">No</th>
+                                <th class="py-3 px-4">Perangkat Daerah (SKPD)</th>
+                                <th class="py-3 px-4 w-32 text-right">Target Pegawai</th>
+                                <th class="py-3 px-4 w-32 text-right">Realisasi TTE</th>
+                                <th class="py-3 px-4 w-56">Persentase Capaian</th>
+                                <th class="py-3 px-4 w-36 text-center">Status</th>
+                                <th class="py-3 px-4 w-36 text-center">Aksi Bantuan</th>
+                            </tr>
+                        </thead>
+                        <tbody id="skpdTableBody" class="divide-y divide-slate-100">
+                            <!-- Injected by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="p-3 bg-slate-50 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-2">
+                    <span>Menampilkan <strong id="lblVisibleRows" class="text-slate-800">20</strong> Perangkat Daerah aktif Kota Cirebon</span>
+                    <a href="#akses-pendaftaran" class="text-blue-600 hover:underline font-semibold">Lihat Pilihan Formulir Pendaftaran TTE →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── 4. SECTION DUA TOMBOL PENDAFTARAN (HALAMAN TERPISAH) ────── -->
+    <section id="akses-pendaftaran" class="py-16 sm:py-20 bg-white border-b border-slate-200">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-12">
+                <span class="text-xs font-bold uppercase tracking-wider text-blue-600 bg-blue-50 border border-blue-200 px-2.5 py-1">
+                    Portal Registrasi Mandiri Publik
+                </span>
+                <h2 class="text-2xl sm:text-4xl font-bold tracking-tight text-slate-900 mt-3 mb-3">
+                    Pilih Jalur Pendaftaran Sertifikat TTE
+                </h2>
+                <p class="text-slate-600 text-sm sm:text-base leading-relaxed">
+                    Formulir pendaftaran berada pada halaman tersendiri yang terpisah dari landing page ini. Silakan pilih kategori kepegawaian Anda untuk diarahkan langsung ke formulir yang tepat.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- KARTU 1: PEGAWAI ASN (PNS & PPPK) -->
+                <div class="bg-slate-50 border-2 border-blue-600 p-8 flex flex-col justify-between hover:shadow-md transition">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-4xl">🏛️</span>
+                            <span class="text-[11px] font-bold uppercase tracking-wider bg-blue-100 text-blue-800 border border-blue-300 px-2.5 py-1">
+                                Wajib Memiliki NIP
+                            </span>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900 mb-2">Formulir Pegawai ASN (PNS & PPPK)</h3>
+                        <p class="text-xs text-slate-600 leading-relaxed mb-6">
+                            Khusus bagi seluruh Pejabat Struktural, Tenaga Pendidik (Guru), Tenaga Medis, Pengawas, Fungsional Ahli, dan Pelaksana ASN yang telah memiliki NIP resmi BKN.
+                        </p>
+                        <div class="bg-white border border-slate-200 p-4 mb-6 text-xs text-slate-700 space-y-2">
+                            <div class="font-bold text-slate-900 border-b border-slate-100 pb-1">Persyaratan Pengisian:</div>
+                            <div class="flex items-center space-x-2"><span>✓</span><span>NIK KTP Elektronik (16 digit angka)</span></div>
+                            <div class="flex items-center space-x-2"><span>✓</span><span>NIP resmi BKN (18 digit angka)</span></div>
+                            <div class="flex items-center space-x-2"><span>✓</span><span>Unit Kerja SKPD & Pangkat/Golongan ruang</span></div>
+                            <div class="flex items-center space-x-2"><span>✓</span><span>Nomor WhatsApp aktif untuk token aktivasi</span></div>
+                        </div>
+                    </div>
+
+                    <!-- TOMBOL MENUJU FORMULIR ASN -->
+                    <a href="pendaftaran_tte_cirebon.html?kategori=asn" class="inline-flex items-center justify-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-3.5 text-sm transition shadow-sm active:scale-95 text-center">
+                        <span>Menuju Formulir Pendaftaran ASN</span>
+                        <span>→</span>
+                    </a>
+                </div>
+
+                <!-- KARTU 2: PEGAWAI NON-ASN (BELUM MEMPUNYAI NIP) -->
+                <div class="bg-slate-50 border-2 border-slate-900 p-8 flex flex-col justify-between hover:shadow-md transition">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-4xl">💼</span>
+                            <span class="text-[11px] font-bold uppercase tracking-wider bg-amber-100 text-amber-900 border border-amber-300 px-2.5 py-1">
+                                Belum Mempunyai NIP
+                            </span>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900 mb-2">Formulir Pegawai Non-ASN (Honorer / Kontrak)</h3>
+                        <p class="text-xs text-slate-600 leading-relaxed mb-6">
+                            Khusus bagi Tenaga Penunjang Kegiatan, Staf BLUD, Pegawai Honorer, dan Rekanan yang belum mempunyai NIP dan ditugaskan memiliki wewenang penandatanganan berkas resmi.
+                        </p>
+                        <div class="bg-white border border-slate-200 p-4 mb-6 text-xs text-slate-700 space-y-2">
+                            <div class="font-bold text-slate-900 border-b border-slate-100 pb-1">Persyaratan Pengisian:</div>
+                            <div class="flex items-center space-x-2"><span>✓</span><span>NIK KTP-el (16 digit) sebagai basis identitas</span></div>
+                            <div class="flex items-center space-x-2"><span>✓</span><span><strong>Nomor SPT / SK Kontrak Kerja</strong> (Pengganti NIP)</span></div>
+                            <div class="flex items-center space-x-2"><span>✓</span><span>Unit Kerja SKPD & Nama Pejabat Pemberi Tugas</span></div>
+                            <div class="flex items-center space-x-2"><span>✓</span><span>Nomor WhatsApp aktif</span></div>
+                        </div>
+                    </div>
+
+                    <!-- TOMBOL MENUJU FORMULIR NON-ASN -->
+                    <a href="pendaftaran_tte_cirebon.html?kategori=non-asn" class="inline-flex items-center justify-center space-x-2 bg-slate-900 hover:bg-slate-800 text-white font-bold px-6 py-3.5 text-sm transition shadow-sm active:scale-95 text-center">
+                        <span>Menuju Formulir Pendaftaran Non-ASN (Tanpa NIP)</span>
+                        <span>→</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── 5. FORMULIR PENGAJUAN KUNJUNGAN LAYANAN TTE (ON-SITE ASSISTANCE) ── -->
+    <section id="layanan-kunjungan" class="py-16 sm:py-20 bg-slate-100 border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="max-w-3xl mb-12">
+                <span class="text-xs font-bold uppercase tracking-wider text-blue-600 bg-blue-50 border border-blue-200 px-2.5 py-1">
+                    Layanan Jemput Bola DKIS
+                </span>
+                <h2 class="text-2xl sm:text-4xl font-bold tracking-tight text-slate-900 mt-3 mb-3">
+                    Pengajuan Kunjungan Layanan TTE (On-Site Assistance)
+                </h2>
+                <p class="text-slate-600 text-sm sm:text-base leading-relaxed">
+                    Perangkat Daerah (SKPD) dapat mengajukan jadwal kunjungan tim teknis persandian DKIS langsung ke kantor Anda untuk percepatan penerbitan sertifikat massal, reset passphrase, maupun bimbingan teknis penggunaan TTE.
+                </p>
+            </div>
+
+            <!-- Form Card Container -->
+            <div class="bg-white border border-slate-200 p-6 sm:p-10 shadow-sm max-w-4xl mx-auto">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-6 mb-6 border-b border-slate-200 gap-4">
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-900">Formulir Permohonan Jadwal Kunjungan On-Site</h3>
+                        <p class="text-xs text-slate-500 mt-1">Harap diisi oleh Kasubbag Kepegawaian/Umum atau staf penanggung jawab (PIC) instansi.</p>
+                    </div>
+                    <span class="inline-flex items-center text-xs font-semibold px-3 py-1.5 bg-blue-50 border border-blue-200 text-blue-700">
+                        ⏱️ Konfirmasi Maksimal 1x24 Jam Kerja
+                    </span>
+                </div>
+
+                <form id="formKunjungan" onsubmit="handleFormKunjungan(event)">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
+                        <div>
+                            <label for="skpd_id" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                                Perangkat Daerah (SKPD) Pemohon <span class="text-red-500">*</span>
+                            </label>
+                            <select id="skpd_id" name="skpd_id" class="w-full py-2.5 px-3 text-sm bg-white border border-slate-300 focus:outline-none focus:border-blue-600 transition" required>
+                                <option value="">-- Pilih Perangkat Daerah --</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="sub_unit" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                                Bidang / Bagian / Sub-Unit Kerja
+                            </label>
+                            <input type="text" id="sub_unit" name="sub_unit" placeholder="Contoh: Bidang Guru & Tenaga Kependidikan" 
+                                   class="w-full py-2.5 px-3 text-sm bg-white border border-slate-300 focus:outline-none focus:border-blue-600 transition">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
+                        <div>
+                            <label for="nama_pic" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                                Nama Penanggung Jawab (PIC) <span class="text-red-500">*</span>
+                            </label>
+                            <input type="text" id="nama_pic" name="nama_pic" placeholder="Nama lengkap beserta gelar pejabat/staf PIC" 
+                                   class="w-full py-2.5 px-3 text-sm bg-white border border-slate-300 focus:outline-none focus:border-blue-600 transition" required>
+                        </div>
+
+                        <div>
+                            <label for="jabatan_pic" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                                Jabatan PIC di Instansi <span class="text-red-500">*</span>
+                            </label>
+                            <input type="text" id="jabatan_pic" name="jabatan_pic" placeholder="Contoh: Kasubbag Umum dan Kepegawaian" 
+                                   class="w-full py-2.5 px-3 text-sm bg-white border border-slate-300 focus:outline-none focus:border-blue-600 transition" required>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
+                        <div>
+                            <label for="no_kontak" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                                Kontak WhatsApp Aktif PIC <span class="text-red-500">*</span>
+                            </label>
+                            <input type="tel" id="no_kontak" name="no_kontak" placeholder="08xxxxxxxxxx" 
+                                   class="w-full py-2.5 px-3 text-sm font-mono bg-white border border-slate-300 focus:outline-none focus:border-blue-600 transition" required>
+                        </div>
+
+                        <div>
+                            <label for="estimasi_peserta" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                                Estimasi Jumlah Pegawai yang Membutuhkan Layanan <span class="text-red-500">*</span>
+                            </label>
+                            <input type="number" id="estimasi_peserta" name="estimasi_peserta" min="1" max="1000" placeholder="Jumlah pegawai (misal: 25)" 
+                                   class="w-full py-2.5 px-3 text-sm font-mono bg-white border border-slate-300 focus:outline-none focus:border-blue-600 transition" required>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
+                        <div>
+                            <label for="tanggal_kunjungan" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                                Rencana Tanggal Kunjungan <span class="text-red-500">*</span>
+                            </label>
+                            <input type="date" id="tanggal_kunjungan" name="tanggal_kunjungan" 
+                                   class="w-full py-2.5 px-3 text-sm font-mono bg-white border border-slate-300 focus:outline-none focus:border-blue-600 transition" required>
+                        </div>
+
+                        <div>
+                            <label for="sesi_kunjungan" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                                Pilihan Sesi Waktu <span class="text-red-500">*</span>
+                            </label>
+                            <select id="sesi_kunjungan" name="sesi_kunjungan" class="w-full py-2.5 px-3 text-sm bg-white border border-slate-300 focus:outline-none focus:border-blue-600 transition" required>
+                                <option value="pagi">Sesi Pagi (09:00 – 12:00 WIB)</option>
+                                <option value="siang">Sesi Siang (13:00 – 15:30 WIB)</option>
+                                <option value="penuh">Sesi Penuh Sehari (09:00 – 15:00 WIB)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="mb-5">
+                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                            Fokus Kebutuhan Layanan Pendampingan <span class="text-red-500">*</span>
+                        </label>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
+                            <label class="flex items-start space-x-2.5 p-3 border border-slate-200 bg-slate-50 hover:bg-white hover:border-blue-500 transition cursor-pointer">
+                                <input type="checkbox" name="fokus_layanan" value="Pendaftaran Baru Massal" checked class="mt-0.5 accent-blue-600">
+                                <div>
+                                    <div class="font-bold text-slate-800">Pendaftaran Baru Massal</div>
+                                    <div class="text-slate-500 text-[11px]">Asistensi pengisian berkas ASN dan Non-ASN di tempat.</div>
+                                </div>
+                            </label>
+
+                            <label class="flex items-start space-x-2.5 p-3 border border-slate-200 bg-slate-50 hover:bg-white hover:border-blue-500 transition cursor-pointer">
+                                <input type="checkbox" name="fokus_layanan" value="Reset Akun / Lupa Passphrase" class="mt-0.5 accent-blue-600">
+                                <div>
+                                    <div class="font-bold text-slate-800">Reset Akun & Lupa Passphrase</div>
+                                    <div class="text-slate-500 text-[11px]">Bantuan pemulihan PIN BSrE yang terlupa atau terblokir.</div>
+                                </div>
+                            </label>
+
+                            <label class="flex items-start space-x-2.5 p-3 border border-slate-200 bg-slate-50 hover:bg-white hover:border-blue-500 transition cursor-pointer">
+                                <input type="checkbox" name="fokus_layanan" value="Perpanjangan Sertifikat Kedaluwarsa" class="mt-0.5 accent-blue-600">
+                                <div>
+                                    <div class="font-bold text-slate-800">Pembaruan Masa Berlaku</div>
+                                    <div class="text-slate-500 text-[11px]">Renewal sertifikat yang mendekati expired (H-7/H-3).</div>
+                                </div>
+                            </label>
+
+                            <label class="flex items-start space-x-2.5 p-3 border border-slate-200 bg-slate-50 hover:bg-white hover:border-blue-500 transition cursor-pointer">
+                                <input type="checkbox" name="fokus_layanan" value="Bimbingan Teknis Naskah Dinas" class="mt-0.5 accent-blue-600">
+                                <div>
+                                    <div class="font-bold text-slate-800">Bimtek Integrasi TTE</div>
+                                    <div class="text-slate-500 text-[11px]">Pelatihan tanda tangan PDF pada aplikasi persuratan resmi.</div>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="mb-5">
+                        <label for="alamat_gedung" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                            Lokasi Ruangan / Gedung Pelaksanaan <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" id="alamat_gedung" name="alamat_gedung" placeholder="Contoh: Ruang Rapat Lantai 2, Gedung Kantor Induk" 
+                               class="w-full py-2.5 px-3 text-sm bg-white border border-slate-300 focus:outline-none focus:border-blue-600 transition" required>
+                    </div>
+
+                    <div class="mb-6">
+                        <label for="catatan" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                            Catatan Tambahan / Kesiapan Sarana (Opsional)
+                        </label>
+                        <textarea id="catatan" name="catatan" rows="3" placeholder="Informasi ketersediaan WiFi, proyektor, atau permohonan khusus lainnya..." 
+                                  class="w-full py-2.5 px-3 text-sm bg-white border border-slate-300 focus:outline-none focus:border-blue-600 transition"></textarea>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row items-center justify-between pt-6 border-t border-slate-200 gap-4">
+                        <p class="text-xs text-slate-500">
+                            * Pengajuan ini akan dicatat ke antrian tiket asistensi on-site Bidang Persandian DKIS.
+                        </p>
+                        <button type="submit" id="btnSubmitKunjungan" class="w-full sm:w-auto inline-flex items-center justify-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white font-bold px-8 py-3.5 text-sm transition shadow-sm active:scale-95">
+                            <span>Kirim Permohonan Kunjungan On-Site</span>
+                            <span>→</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── 6. PERTANYAAN UMUM (FAQ ACCORDION) ─────────────────────── -->
+    <section id="faq" class="py-16 sm:py-20 bg-white border-b border-slate-200">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto mb-12">
+                <span class="text-xs font-bold uppercase tracking-wider text-blue-600 bg-blue-50 border border-blue-200 px-2.5 py-1">
+                    Pusat Informasi & FAQ
+                </span>
+                <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 mt-3 mb-2">
+                    Pertanyaan yang Sering Diajukan
+                </h2>
+                <p class="text-slate-600 text-sm">
+                    Jawaban ringkas seputar prosedur bagi pegawai ASN maupun Non-ASN di lingkungan Pemkot Cirebon.
+                </p>
+            </div>
+
+            <div class="divide-y divide-slate-200 border-y border-slate-200" id="faqAccordion">
+                <div class="py-4">
+                    <button type="button" class="flex items-center justify-between w-full text-left font-bold text-sm sm:text-base text-slate-900 focus:outline-none" onclick="toggleFaq(this)">
+                        <span>1. Di mana saya mengisi formulir pendaftaran TTE?</span>
+                        <span class="text-blue-600 text-lg transition-transform font-mono">+</span>
+                    </button>
+                    <div class="hidden pt-3 text-xs sm:text-sm text-slate-600 leading-relaxed">
+                        Formulir pendaftaran dipisahkan ke dalam halaman khusus pendaftaran. Anda dapat memilih tombol <a href="pendaftaran_tte_cirebon.html?kategori=asn" class="text-blue-600 underline font-bold">Daftar ASN</a> bagi yang memiliki NIP atau <a href="pendaftaran_tte_cirebon.html?kategori=non-asn" class="text-blue-600 underline font-bold">Daftar Non-ASN</a> bagi tenaga kontrak/honorer yang belum memiliki NIP.
+                    </div>
+                </div>
+
+                <div class="py-4">
+                    <button type="button" class="flex items-center justify-between w-full text-left font-bold text-sm sm:text-base text-slate-900 focus:outline-none" onclick="toggleFaq(this)">
+                        <span>2. Apakah pegawai Non-ASN yang belum memiliki NIP bisa mendaftar TTE?</span>
+                        <span class="text-blue-600 text-lg transition-transform font-mono">+</span>
+                    </button>
+                    <div class="hidden pt-3 text-xs sm:text-sm text-slate-600 leading-relaxed">
+                        <strong>Bisa.</strong> Pegawai Non-ASN (Honorer, THL, Tenaga Teknis BLUD, Rekanan) tidak memerlukan NIP. Cukup masukkan NIK KTP-el dan Nomor Surat Perintah Tugas (SPT) / SK Kontrak Kerja dari Kepala SKPD.
+                    </div>
+                </div>
+
+                <div class="py-4">
+                    <button type="button" class="flex items-center justify-between w-full text-left font-bold text-sm sm:text-base text-slate-900 focus:outline-none" onclick="toggleFaq(this)">
+                        <span>3. Berapa lama masa berlaku sertifikat TTE?</span>
+                        <span class="text-blue-600 text-lg transition-transform font-mono">+</span>
+                    </button>
+                    <div class="hidden pt-3 text-xs sm:text-sm text-slate-600 leading-relaxed">
+                        Sertifikat TTE berlaku selama <strong>2 (dua) tahun</strong> sejak diterbitkan. Sistem monitoring otomatis memberikan notifikasi peringatan Warning H-7 dan H-3 sebelum masa berlaku habis.
+                    </div>
+                </div>
+
+                <div class="py-4">
+                    <button type="button" class="flex items-center justify-between w-full text-left font-bold text-sm sm:text-base text-slate-900 focus:outline-none" onclick="toggleFaq(this)">
+                        <span>4. Bagaimana cara SKPD mengajukan bantuan kunjungan jemput bola (on-site)?</span>
+                        <span class="text-blue-600 text-lg transition-transform font-mono">+</span>
+                    </button>
+                    <div class="hidden pt-3 text-xs sm:text-sm text-slate-600 leading-relaxed">
+                        Cukup isi formulir pada bagian <a href="#layanan-kunjungan" class="text-blue-600 underline font-bold">Layanan Kunjungan On-Site</a> di atas. Tentukan rencana tanggal, estimasi pegawai yang dibantu, dan kontak PIC. Tim Diskominfo akan segera mengonfirmasi dan hadir ke kantor instansi Anda.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── 7. FOOTER RESMI (BERSIH DARI MENU LOGIN SUPERADMIN) ───── -->
+    <footer class="bg-slate-950 text-white border-t-2 border-blue-600 pt-12 pb-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8 pb-8 border-b border-slate-800 text-xs text-slate-400">
+                <div>
+                    <div class="flex items-center space-x-3 mb-3">
+                        <div class="w-8 h-8 bg-blue-600 flex items-center justify-center font-bold text-white text-sm">CRB</div>
+                        <div>
+                            <div class="text-white font-bold uppercase tracking-wider text-xs">Pemerintah Kota Cirebon</div>
+                            <div class="text-[11px] text-slate-400">Dinas Komunikasi, Informatika dan Statistik</div>
+                        </div>
+                    </div>
+                    <p class="leading-relaxed">
+                        Gedung Balai Kota Cirebon · Bidang Persandian dan Keamanan Informasi.<br>
+                        Mewujudkan transformasi SPBE persuratan elektronik yang berkekuatan hukum, sah, dan bebas kertas di seluruh satuan kerja Pemerintah Kota Cirebon.
+                    </p>
+                </div>
+
+                <div>
+                    <div class="text-white font-bold uppercase tracking-wider mb-3 text-xs border-b border-slate-800 pb-1">Tautan Layanan Publik</div>
+                    <ul class="space-y-1.5">
+                        <li><a href="pendaftaran_tte_cirebon.html?kategori=asn" class="hover:text-white transition">→ Formulir Pendaftaran ASN (Dengan NIP)</a></li>
+                        <li><a href="pendaftaran_tte_cirebon.html?kategori=non-asn" class="hover:text-white transition">→ Formulir Pendaftaran Non-ASN (Tanpa NIP)</a></li>
+                        <li><a href="#macro-capaian" class="hover:text-white transition">→ Transparansi Capaian SKPD se-Kota</a></li>
+                        <li><a href="#layanan-kunjungan" class="hover:text-white transition">→ Pengajuan Kunjungan Layanan On-Site</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <div class="text-white font-bold uppercase tracking-wider mb-3 text-xs border-b border-slate-800 pb-1">Kontak & Helpdesk Resmi</div>
+                    <ul class="space-y-1.5">
+                        <li>📍 <strong>Alamat:</strong> Jl. Siliwangi No. 84, Kejaksan, Kota Cirebon</li>
+                        <li>🕒 <strong>Jam Kerja:</strong> Senin – Jumat (08.00 – 16.00 WIB)</li>
+                        <li>✉️ <strong>Email:</strong> persandian@cirebonkota.go.id</li>
+                        <li>📞 <strong>Helpdesk TTE:</strong> (0231) 206011 / WhatsApp DKIS</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="flex flex-col sm:flex-row items-center justify-between text-[11px] text-slate-500 gap-2">
+                <div>
+                    © 2026 Dinas Komunikasi, Informatika dan Statistik Pemerintah Kota Cirebon. Hak Cipta Dilindungi.
+                </div>
+                <div class="flex items-center space-x-3">
+                    <span>BSrE BSSN Compliant</span>
+                    <span>•</span>
+                    <span>Halaman Landing Page & Pendaftaran Terpisah</span>
+                    <span>•</span>
+                    <span>Zero Admin Exposure</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ── 8. MODAL KONFIRMASI TIKET KUNJUNGAN ON-SITE ───────────── -->
+    <div id="modalTiketSukses" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white max-w-lg w-full border border-slate-300 shadow-2xl p-6 sm:p-8 text-center animate-in fade-in zoom-in duration-200">
+            <div class="w-14 h-14 bg-emerald-100 border border-emerald-300 text-emerald-700 flex items-center justify-center text-2xl font-bold mx-auto mb-4">
+                ✓
+            </div>
+            <h3 class="text-xl font-bold text-slate-900 mb-1">Permohonan Kunjungan On-Site Berhasil Dicatat!</h3>
+            <p class="text-xs text-slate-500 mb-6">Nomor tiket resmi telah diterbitkan dan tersimpan dalam sistem pemantauan.</p>
+
+            <div class="bg-slate-50 border-2 border-dashed border-slate-300 p-5 text-left text-xs mb-6 font-mono">
+                <div class="flex justify-between items-center border-b border-slate-200 pb-2 mb-3">
+                    <span class="font-bold text-slate-800 uppercase">PEMERINTAH KOTA CIREBON</span>
+                    <span class="px-2 py-0.5 bg-emerald-600 text-white text-[10px] font-bold">TERCATAT RESMI</span>
+                </div>
+                <div class="text-center py-2 bg-blue-50 border border-blue-200 text-blue-800 font-bold text-base mb-3" id="slipNoTiket">
+                    KJN-CRB-20261107-XXXX
+                </div>
+                <div class="space-y-1.5 text-slate-600">
+                    <div class="flex justify-between">
+                        <span>Instansi (SKPD):</span>
+                        <strong class="text-slate-900" id="slipSkpd">-</strong>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>Nama PIC / Jabatan:</span>
+                        <strong class="text-slate-900" id="slipPic">-</strong>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>Kontak WhatsApp:</span>
+                        <strong class="text-slate-900" id="slipKontak">-</strong>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>Jadwal Kunjungan:</span>
+                        <strong class="text-slate-900" id="slipJadwal">-</strong>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>Estimasi Personil:</span>
+                        <strong class="text-slate-900" id="slipPeserta">-</strong>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>Lokasi Ruangan:</span>
+                        <strong class="text-slate-900" id="slipLokasi">-</strong>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-2">
+                <button type="button" onclick="window.print()" class="w-full sm:w-auto px-4 py-2.5 text-xs font-semibold bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 transition">
+                    🖨️ Cetak Tanda Terima
+                </button>
+                <a id="btnWhatsAppConfirm" href="#" target="_blank" class="w-full sm:w-auto px-5 py-2.5 text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white transition flex items-center justify-center space-x-1.5">
+                    <span>💬 Konfirmasi WhatsApp</span>
+                </a>
+                <button type="button" onclick="closeModalTiket()" class="w-full sm:w-auto px-4 py-2.5 text-xs font-semibold bg-slate-800 hover:bg-slate-900 text-white transition">
+                    Tutup
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── 9. JAVASCRIPT LOGIC ───────────────────────────────────── -->
+    <script>
+        const DATA_SKPD = [
+            { id: 20, nama: "Kecamatan Pekalipan", kode: "KECAMATAN-PS", total_asn: 20, pendaftar: 18, disetujui: 18 },
+            { id: 19, nama: "Kecamatan Kejaksan", kode: "KECAMATAN-KJ", total_asn: 25, pendaftar: 21, disetujui: 20 },
+            { id: 18, nama: "Kecamatan Lemahwungkuk", kode: "KECAMATAN-LR", total_asn: 25, pendaftar: 20, disetujui: 19 },
+            { id: 1,  nama: "Dinas Komunikasi dan Informatika", kode: "DISKOMINFO", total_asn: 45, pendaftar: 36, disetujui: 35 },
+            { id: 4,  nama: "Badan Kepegawaian dan Pengembangan Sumber Daya Manusia", kode: "BKPSDM", total_asn: 50, pendaftar: 39, disetujui: 38 },
+            { id: 15, nama: "Inspektorat Daerah", kode: "INSPEKTORAT", total_asn: 30, pendaftar: 22, disetujui: 20 },
+            { id: 2,  nama: "Badan Perencanaan Pembangunan Daerah", kode: "BAPPEDA", total_asn: 55, pendaftar: 35, disetujui: 32 },
+            { id: 9,  nama: "Dinas Sosial, Pemberdayaan Perempuan dan Perlindungan Anak", kode: "DINSOSPPPA", total_asn: 40, pendaftar: 25, disetujui: 22 },
+            { id: 10, nama: "Dinas Perumahan Rakyat dan Kawasan Permukiman", kode: "DINPERKIM", total_asn: 50, pendaftar: 30, disetujui: 28 },
+            { id: 14, nama: "Dinas Perindustrian dan Perdagangan", kode: "DINPERIN", total_asn: 35, pendaftar: 20, disetujui: 19 },
+            { id: 17, nama: "Sekretariat DPRD", kode: "SETWAN", total_asn: 35, pendaftar: 19, disetujui: 18 },
+            { id: 8,  nama: "Dinas Perhubungan", kode: "DISHUB", total_asn: 60, pendaftar: 30, disetujui: 26 },
+            { id: 13, nama: "Dinas Penanaman Modal dan Pelayanan Terpadu Satu Pintu", kode: "DPMPTSP", total_asn: 40, pendaftar: 20, disetujui: 18 },
+            { id: 3,  nama: "Badan Pengelolaan Keuangan dan Aset Daerah", kode: "BPKAD", total_asn: 65, pendaftar: 32, disetujui: 30 },
+            { id: 12, nama: "Dinas Kependudukan dan Pencatatan Sipil", kode: "DISDUKCAPIL", total_asn: 55, pendaftar: 26, disetujui: 24 },
+            { id: 7,  nama: "Dinas Pekerjaan Umum dan Penataan Ruang", kode: "DPUPR", total_asn: 85, pendaftar: 38, disetujui: 34 },
+            { id: 11, nama: "Dinas Lingkungan Hidup dan Kebersihan", kode: "DLHK", total_asn: 75, pendaftar: 32, disetujui: 28 },
+            { id: 16, nama: "Sekretariat Daerah", kode: "SETDA", total_asn: 90, pendaftar: 36, disetujui: 32 },
+            { id: 5,  nama: "Dinas Kesehatan", kode: "DINKES", total_asn: 120, pendaftar: 45, disetujui: 40 },
+            { id: 6,  nama: "Dinas Pendidikan", kode: "DISDIK", total_asn: 200, pendaftar: 75, disetujui: 65 },
+        ];
+
+        let activeCategory = 'semua';
+
+        DATA_SKPD.forEach(item => {
+            item.persentase = item.total_asn > 0 ? Math.round((item.pendaftar / item.total_asn) * 1000) / 10 : 0;
+            if (item.persentase >= 80) item.kategori = 'optimal';
+            else if (item.persentase >= 50) item.kategori = 'progresif';
+            else item.kategori = 'akselerasi';
+        });
+
+        DATA_SKPD.sort((a, b) => b.persentase - a.persentase);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initMacroStatistics();
+            renderSkpdTable();
+            populateSkpdDropdown();
+
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            const minDate = tomorrow.toISOString().split('T')[0];
+            const dateInput = document.getElementById('tanggal_kunjungan');
+            if (dateInput) dateInput.min = minDate;
+        });
+
+        function initMacroStatistics() {
+            let totalAsn = 0;
+            let totalPendaftar = 0;
+            let totalDisetujui = 0;
+            let optimalCount = 0;
+            let progresifCount = 0;
+            let akselerasiCount = 0;
+
+            DATA_SKPD.forEach(item => {
+                totalAsn += item.total_asn;
+                totalPendaftar += item.pendaftar;
+                totalDisetujui += item.disetujui;
+
+                if (item.kategori === 'optimal') optimalCount++;
+                else if (item.kategori === 'progresif') progresifCount++;
+                else akselerasiCount++;
+            });
+
+            const percentKota = totalAsn > 0 ? (Math.round((totalPendaftar / totalAsn) * 1000) / 10) : 0;
+
+            document.getElementById('statTargetAsn').textContent = totalAsn.toLocaleString('id-ID');
+            document.getElementById('statPendaftar').textContent = totalPendaftar.toLocaleString('id-ID');
+            document.getElementById('statDisetujui').textContent = totalDisetujui.toLocaleString('id-ID');
+            document.getElementById('statPersentaseKota').textContent = percentKota + '%';
+            document.getElementById('macroBarPercentText').textContent = percentKota + '%';
+            document.getElementById('macroBarFill').style.width = Math.min(100, percentKota) + '%';
+            document.getElementById('lblRealisasi').textContent = totalPendaftar.toLocaleString('id-ID') + ' Pegawai';
+            document.getElementById('lblTarget').textContent = totalAsn.toLocaleString('id-ID') + ' Pegawai';
+
+            document.getElementById('badgeCountOptimal').textContent = optimalCount + ' SKPD';
+            document.getElementById('badgeCountProgresif').textContent = progresifCount + ' SKPD';
+            document.getElementById('badgeCountAkselerasi').textContent = akselerasiCount + ' SKPD';
+            document.getElementById('totalSkpdCount').textContent = DATA_SKPD.length;
+        }
+
+        function renderSkpdTable() {
+            const tbody = document.getElementById('skpdTableBody');
+            tbody.innerHTML = '';
+
+            const searchVal = (document.getElementById('skpdSearchInput')?.value || '').toLowerCase().trim();
+            let visibleCount = 0;
+
+            DATA_SKPD.forEach((item, index) => {
+                const matchesCat = (activeCategory === 'semua' || item.kategori === activeCategory);
+                const matchesSearch = (!searchVal || item.nama.toLowerCase().includes(searchVal) || item.kode.toLowerCase().includes(searchVal));
+
+                if (matchesCat && matchesSearch) {
+                    visibleCount++;
+                    const tr = document.createElement('tr');
+                    tr.className = 'hover:bg-blue-50/40 transition border-b border-slate-100';
+
+                    let badgeHtml = '';
+                    let barColorClass = '';
+                    if (item.kategori === 'optimal') {
+                        badgeHtml = '<span class="inline-flex items-center px-2 py-0.5 text-[11px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">Optimal</span>';
+                        barColorClass = 'bg-emerald-600';
+                    } else if (item.kategori === 'progresif') {
+                        badgeHtml = '<span class="inline-flex items-center px-2 py-0.5 text-[11px] font-bold bg-blue-100 text-blue-800 border border-blue-300">Progresif</span>';
+                        barColorClass = 'bg-blue-600';
+                    } else {
+                        badgeHtml = '<span class="inline-flex items-center px-2 py-0.5 text-[11px] font-bold bg-amber-100 text-amber-800 border border-amber-300">Akselerasi</span>';
+                        barColorClass = 'bg-amber-500';
+                    }
+
+                    tr.innerHTML = `
+                        <td class="py-3 px-4 text-center font-mono text-xs text-slate-400">${visibleCount}</td>
+                        <td class="py-3 px-4">
+                            <div class="font-bold text-slate-900">${item.nama}</div>
+                            <div class="text-[11px] font-mono text-slate-400">${item.kode}</div>
+                        </td>
+                        <td class="py-3 px-4 text-right font-mono font-semibold">${item.total_asn} <span class="text-xs text-slate-400 font-normal">ASN</span></td>
+                        <td class="py-3 px-4 text-right font-mono">
+                            <span class="font-bold text-blue-600">${item.pendaftar}</span>
+                            <div class="text-[10px] text-slate-400">${item.disetujui} terbit</div>
+                        </td>
+                        <td class="py-3 px-4">
+                            <div class="flex justify-between text-xs font-mono font-bold mb-1">
+                                <span>${item.persentase}%</span>
+                                <span class="text-slate-400 font-normal">${item.pendaftar}/${item.total_asn}</span>
+                            </div>
+                            <div class="w-full bg-slate-100 h-2 border border-slate-200 overflow-hidden">
+                                <div class="${barColorClass} h-full transition-all duration-500" style="width: ${Math.min(100, item.persentase)}%;"></div>
+                            </div>
+                        </td>
+                        <td class="py-3 px-4 text-center">${badgeHtml}</td>
+                        <td class="py-3 px-4 text-center">
+                            <button type="button" onclick="selectSkpdForAssistance(${item.id})" class="px-2.5 py-1 text-xs font-medium text-slate-700 hover:text-blue-600 bg-white border border-slate-300 hover:border-blue-500 transition shadow-2xs">
+                                🏢 Jadwalkan
+                            </button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                }
+            });
+
+            document.getElementById('lblVisibleRows').textContent = visibleCount;
+        }
+
+        function setCategoryFilter(category, btnElement) {
+            activeCategory = category;
+            document.querySelectorAll('.filter-tab-btn').forEach(btn => {
+                btn.className = 'filter-tab-btn px-3 py-1.5 text-xs font-semibold uppercase tracking-wider bg-white text-slate-700 border border-slate-300 hover:bg-slate-100';
+            });
+            btnElement.className = 'filter-tab-btn px-3 py-1.5 text-xs font-semibold uppercase tracking-wider bg-slate-900 text-white';
+            renderSkpdTable();
+        }
+
+        function filterSkpdTable() {
+            renderSkpdTable();
+        }
+
+        function populateSkpdDropdown() {
+            const select = document.getElementById('skpd_id');
+            if (!select) return;
+            const sortedList = [...DATA_SKPD].sort((a, b) => a.nama.localeCompare(b.nama));
+            sortedList.forEach(item => {
+                const opt = document.createElement('option');
+                opt.value = item.id;
+                opt.textContent = `${item.nama} (${item.kode})`;
+                select.appendChild(opt);
+            });
+        }
+
+        function selectSkpdForAssistance(skpdId) {
+            const select = document.getElementById('skpd_id');
+            if (select) {
+                select.value = skpdId;
+                document.getElementById('layanan-kunjungan').scrollIntoView({ behavior: 'smooth' });
+                select.classList.add('ring-2', 'ring-blue-600');
+                setTimeout(() => select.classList.remove('ring-2', 'ring-blue-600'), 1500);
+            }
+        }
+
+        function handleFormKunjungan(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btnSubmitKunjungan');
+            const skpdSelect = document.getElementById('skpd_id');
+            const skpdNama = skpdSelect.options[skpdSelect.selectedIndex].text;
+            const namaPic = document.getElementById('nama_pic').value.trim();
+            const jabatanPic = document.getElementById('jabatan_pic').value.trim();
+            const noKontak = document.getElementById('no_kontak').value.trim();
+            const estimasiPeserta = document.getElementById('estimasi_peserta').value;
+            const tanggalKunjungan = document.getElementById('tanggal_kunjungan').value;
+            const sesiSelect = document.getElementById('sesi_kunjungan');
+            const sesiKunjungan = sesiSelect.options[sesiSelect.selectedIndex].text;
+            const alamatGedung = document.getElementById('alamat_gedung').value.trim();
+
+            const checkedBoxes = Array.from(document.querySelectorAll('input[name="fokus_layanan"]:checked')).map(cb => cb.value);
+            if (checkedBoxes.length === 0) {
+                alert('Silakan pilih minimal satu jenis layanan pendampingan.');
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = '<span>Memproses...</span>';
+
+            setTimeout(() => {
+                btn.disabled = false;
+                btn.innerHTML = '<span>Kirim Permohonan Kunjungan On-Site</span><span>→</span>';
+
+                const now = new Date();
+                const ymd = now.toISOString().slice(0, 10).replace(/-/g, '');
+                const randHex = Math.floor(Math.random() * 0xFFFF).toString(16).toUpperCase().padStart(4, '0');
+                const ticketNumber = `KJN-CRB-${ymd}-${randHex}`;
+
+                document.getElementById('slipNoTiket').textContent = ticketNumber;
+                document.getElementById('slipSkpd').textContent = skpdNama;
+                document.getElementById('slipPic').textContent = `${namaPic} (${jabatanPic})`;
+                document.getElementById('slipKontak').textContent = noKontak;
+                document.getElementById('slipJadwal').textContent = `${tanggalKunjungan} (${sesiKunjungan})`;
+                document.getElementById('slipPeserta').textContent = `${estimasiPeserta} Pegawai`;
+                document.getElementById('slipLokasi').textContent = alamatGedung;
+
+                const waText = encodeURIComponent(
+                    `*KONFIRMASI PENGAJUAN KUNJUNGAN LAYANAN TTE*\nPemerintah Kota Cirebon\n\n` +
+                    `*No. Tiket:* ${ticketNumber}\n*Instansi:* ${skpdNama}\n*PIC:* ${namaPic} (${jabatanPic})\n` +
+                    `*Kontak:* ${noKontak}\n*Tanggal Kunjungan:* ${tanggalKunjungan} (${sesiKunjungan})\n` +
+                    `*Estimasi Pegawai:* ${estimasiPeserta} orang\n*Lokasi:* ${alamatGedung}\n` +
+                    `*Kebutuhan Layanan:* ${checkedBoxes.join(', ')}\n\nMohon konfirmasi kesiapan tim teknis DKIS. Terima kasih.`
+                );
+                document.getElementById('btnWhatsAppConfirm').href = `https://wa.me/628112060110?text=${waText}`;
+
+                document.getElementById('modalTiketSukses').classList.remove('hidden');
+                document.getElementById('formKunjungan').reset();
+            }, 600);
+        }
+
+        function closeModalTiket() {
+            document.getElementById('modalTiketSukses').classList.add('hidden');
+        }
+
+        function toggleFaq(button) {
+            const content = button.nextElementSibling;
+            const icon = button.querySelector('span:last-child');
+            const isHidden = content.classList.contains('hidden');
+
+            document.querySelectorAll('#faqAccordion > div > div').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('#faqAccordion button span:last-child').forEach(el => el.textContent = '+');
+
+            if (isHidden) {
+                content.classList.remove('hidden');
+                icon.textContent = '−';
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+includes:
+    - vendor/larastan/larastan/extension.neon
+
+parameters:
+    paths:
+        - app/Services/Security
+        - app/Domain/Pendaftaran
+
+    level: 5
