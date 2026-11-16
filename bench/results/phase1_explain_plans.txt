@@ -1,170 +1,200 @@
-HASIL EXPLAIN (ANALYZE, BUFFERS) - SISMON TTE POSTGRESQL 16 (CONTAINER TERISOLASI)
-Tanggal Pengujian: 2026-11-15T12:53:14+00:00
-Container: tte_postgres_bench (Port 5433 host / 5432 internal)
-PostgreSQL Version: PostgreSQL 16.15 on x86_64-pc-linux-musl, compiled by gcc (Alpine 15.2.0) 15.2.0, 64-bit
-Server Config: shared_buffers=128MB, work_mem=4MB, effective_cache_size=4GB, random_page_cost=4
-Dataset: 100.000 baris pendaftaran_tte (60.000 MENUNGGU_VERIFIKASI, 20.000 DISETUJUI, 20.000 DITOLAK)
+====================================================================================================
+HASIL ILUSTRASI EXPLAIN (FORMAT TEXT) - POSTGRESQL 16 (CONTAINER TERISOLASI)
+Tanggal Pengujian : 2026-11-16T09:00:20+00:00
+Container Target  : tte_postgres_bench (Port 5433 host / 5432 internal)
+PostgreSQL Engine : PostgreSQL 16.15 on x86_64-pc-linux-musl, compiled by gcc (Alpine 15.2.0) 15.2.0, 64-bit
+Server Config     : shared_buffers=128MB, work_mem=4MB, effective_cache_size=4GB, random_page_cost=4
+Dataset           : 100.000 baris pendaftaran_tte
+DISCLAIMER        : Plan teks di bawah ini adalah ILUSTRASI representatif dari 1 run terukur.
+                    Metrik numerik resmi (mean/median/min/max/SD) dihitung dari evaluasi 30 target
+                    pada berkas phase1_summary.json.
 ====================================================================================================
 
 ### [Query A] Query A: Jalur Lama (Algoritma 4 Compound OR: ILIKE nama/ref/deskripsi OR nik/nip, filter status)
-Deskripsi: Jalur lama compound OR dengan filter status
-SQL: SELECT * FROM pendaftaran_tte WHERE status = 'MENUNGGU_VERIFIKASI' AND (nama_lengkap ILIKE ? OR nomor_referensi ILIKE ? OR deskripsi ILIKE ? OR nik = ? OR nip = ?) ORDER BY created_at ASC LIMIT 15
-Repetisi: 5x | Min: 254.669 ms | Max: 491.358 ms | Mean: 387.770 ms | Median: 409.379 ms
-Buffers (Median Run): Shared Hit=15038, Shared Read=0
-PLAN:
-Limit  (cost=5745.81..5747.56 rows=15 width=2487) (actual time=327.702..334.532 rows=1 loops=1)
-  Buffers: shared hit=3778
-  ->  Gather Merge  (cost=5745.81..5747.68 rows=16 width=2487) (actual time=327.699..334.527 rows=1 loops=1)
+Deskripsi   : Jalur lama compound OR dengan filter status
+SQL         : SELECT * FROM pendaftaran_tte WHERE status = 'MENUNGGU_VERIFIKASI' AND (nama_lengkap ILIKE ? OR nomor_referensi ILIKE ? OR deskripsi ILIKE ? OR nik = ? OR nip = ?) ORDER BY created_at ASC LIMIT 15
+Evaluasi    : 30 target acak (Seed: 20261116)
+Statistik   : Min: 242.958 ms | Max: 747.192 ms | Mean: 355.424 ms | Median: 342.780 ms | SD: 92.611 ms
+Root Buffer : Shared Hit=3924, Shared Read=0 (Diambil langsung dari Root Plan Node)
+[ILUSTRASI PLAN TEXT - SINGLE RUN BUKAN DARI MEDIAN AGREGAT]:
+Limit  (cost=5891.81..5893.56 rows=15 width=2501) (actual time=327.446..337.903 rows=1 loops=1)
+  Buffers: shared hit=3924
+  ->  Gather Merge  (cost=5891.81..5893.68 rows=16 width=2501) (actual time=327.444..337.898 rows=1 loops=1)
         Workers Planned: 2
         Workers Launched: 2
-        Buffers: shared hit=3778
-        ->  Sort  (cost=4745.79..4745.81 rows=8 width=2487) (actual time=291.285..291.286 rows=0 loops=3)
+        Buffers: shared hit=3924
+        ->  Sort  (cost=4891.79..4891.81 rows=8 width=2501) (actual time=306.736..306.738 rows=0 loops=3)
               Sort Key: created_at
               Sort Method: quicksort  Memory: 25kB
-              Buffers: shared hit=3778
+              Buffers: shared hit=3924
               Worker 0:  Sort Method: quicksort  Memory: 25kB
               Worker 1:  Sort Method: quicksort  Memory: 25kB
-              ->  Parallel Seq Scan on pendaftaran_tte  (cost=0.00..4745.67 rows=8 width=2487) (actual time=249.704..286.849 rows=0 loops=3)
-                    Filter: (((status)::text = 'MENUNGGU_VERIFIKASI'::text) AND (((nama_lengkap)::text ~~* '%3274000000030001%'::text) OR ((nomor_referensi)::text ~~* '%3274000000030001%'::text) OR (deskripsi ~~* '%3274000000030001%'::text) OR ((nik)::text = 'LY7AuiGCoGuT76o6AJ8Yr1/Wt44Hf2JXYZdVHc5BEk4='::text) OR ((nip)::text = 'LY7AuiGCoGuT76o6AJ8Yr1/Wt44Hf2JXYZdVHc5BEk4='::text)))
+              ->  Parallel Seq Scan on pendaftaran_tte  (cost=0.00..4891.67 rows=8 width=2501) (actual time=199.527..306.144 rows=0 loops=3)
+                    Filter: (((status)::text = 'MENUNGGU_VERIFIKASI'::text) AND (((nama_lengkap)::text ~~* '%3274016406720001%'::text) OR ((nomor_referensi)::text ~~* '%3274016406720001%'::text) OR (deskripsi ~~* '%3274016406720001%'::text) OR ((nik)::text = '+QWRuoWzGcQS1HOzwvZ7uk5zRWosoIak3vDmjMJxLXg='::text) OR ((nip)::text = '+QWRuoWzGcQS1HOzwvZ7uk5zRWosoIak3vDmjMJxLXg='::text)))
                     Rows Removed by Filter: 33333
-                    Buffers: shared hit=3704
-Planning Time: 1.152 ms
-Execution Time: 334.744 ms
+                    Buffers: shared hit=3850
+Planning Time: 1.113 ms
+Execution Time: 338.118 ms
 
 ----------------------------------------------------------------------------------------------------
 
 ### [Query B] Query B: Jalur Lama Tanpa Filter Status (Compound OR murni teks + cipher)
-Deskripsi: Jalur lama compound OR tanpa filter status
-SQL: SELECT * FROM pendaftaran_tte WHERE (nama_lengkap ILIKE ? OR nomor_referensi ILIKE ? OR deskripsi ILIKE ? OR nik = ? OR nip = ?) LIMIT 15
-Repetisi: 5x | Min: 252.123 ms | Max: 307.204 ms | Mean: 276.533 ms | Median: 276.456 ms
-Buffers (Median Run): Shared Hit=7408, Shared Read=0
-PLAN:
-Limit  (cost=0.00..2790.94 rows=15 width=2487) (actual time=74.516..287.232 rows=1 loops=1)
-  Buffers: shared hit=3704
-  ->  Seq Scan on pendaftaran_tte  (cost=0.00..5954.00 rows=32 width=2487) (actual time=74.514..287.229 rows=1 loops=1)
-        Filter: (((nama_lengkap)::text ~~* '%3274000000030001%'::text) OR ((nomor_referensi)::text ~~* '%3274000000030001%'::text) OR (deskripsi ~~* '%3274000000030001%'::text) OR ((nik)::text = 'LY7AuiGCoGuT76o6AJ8Yr1/Wt44Hf2JXYZdVHc5BEk4='::text) OR ((nip)::text = 'LY7AuiGCoGuT76o6AJ8Yr1/Wt44Hf2JXYZdVHc5BEk4='::text))
+Deskripsi   : Jalur lama compound OR tanpa filter status
+SQL         : SELECT * FROM pendaftaran_tte WHERE (nama_lengkap ILIKE ? OR nomor_referensi ILIKE ? OR deskripsi ILIKE ? OR nik = ? OR nip = ?) LIMIT 15
+Evaluasi    : 30 target acak (Seed: 20261116)
+Statistik   : Min: 350.982 ms | Max: 1,117.544 ms | Mean: 522.597 ms | Median: 434.474 ms | SD: 186.730 ms
+Root Buffer : Shared Hit=3850, Shared Read=0 (Diambil langsung dari Root Plan Node)
+[ILUSTRASI PLAN TEXT - SINGLE RUN BUKAN DARI MEDIAN AGREGAT]:
+Limit  (cost=0.00..2859.38 rows=15 width=2501) (actual time=4.918..427.824 rows=1 loops=1)
+  Buffers: shared hit=3850
+  ->  Seq Scan on pendaftaran_tte  (cost=0.00..6100.00 rows=32 width=2501) (actual time=4.916..427.820 rows=1 loops=1)
+        Filter: (((nama_lengkap)::text ~~* '%3274016406720001%'::text) OR ((nomor_referensi)::text ~~* '%3274016406720001%'::text) OR (deskripsi ~~* '%3274016406720001%'::text) OR ((nik)::text = '+QWRuoWzGcQS1HOzwvZ7uk5zRWosoIak3vDmjMJxLXg='::text) OR ((nip)::text = '+QWRuoWzGcQS1HOzwvZ7uk5zRWosoIak3vDmjMJxLXg='::text))
         Rows Removed by Filter: 99999
-        Buffers: shared hit=3704
-Planning Time: 0.321 ms
-Execution Time: 287.294 ms
+        Buffers: shared hit=3850
+Planning Time: 1.049 ms
+Execution Time: 427.928 ms
 
 ----------------------------------------------------------------------------------------------------
 
 ### [Query C] Query C: Jalur Terpisah Exact-Match NIK (status = MENUNGGU_VERIFIKASI)
-Deskripsi: Jalur terpisah exact-match NIK pada data aktif
-SQL: SELECT * FROM pendaftaran_tte WHERE status = 'MENUNGGU_VERIFIKASI' AND nik = ? LIMIT 15
-Repetisi: 5x | Min: 0.127 ms | Max: 0.334 ms | Mean: 0.189 ms | Median: 0.168 ms
-Buffers (Median Run): Shared Hit=8, Shared Read=0
-PLAN:
-Limit  (cost=0.42..8.44 rows=1 width=2487) (actual time=0.032..0.033 rows=1 loops=1)
+Deskripsi   : Jalur terpisah exact-match NIK pada data aktif
+SQL         : SELECT * FROM pendaftaran_tte WHERE status = 'MENUNGGU_VERIFIKASI' AND nik = ? LIMIT 15
+Evaluasi    : 30 target acak (Seed: 20261116)
+Statistik   : Min: 0.075 ms | Max: 0.785 ms | Mean: 0.149 ms | Median: 0.109 ms | SD: 0.130 ms
+Root Buffer : Shared Hit=4, Shared Read=0 (Diambil langsung dari Root Plan Node)
+[ILUSTRASI PLAN TEXT - SINGLE RUN BUKAN DARI MEDIAN AGREGAT]:
+Limit  (cost=0.42..8.44 rows=1 width=2501) (actual time=0.050..0.052 rows=1 loops=1)
   Buffers: shared hit=4
-  ->  Index Scan using idx_pendaftaran_nik_all on pendaftaran_tte  (cost=0.42..8.44 rows=1 width=2487) (actual time=0.031..0.032 rows=1 loops=1)
-        Index Cond: ((nik)::text = 'LY7AuiGCoGuT76o6AJ8Yr1/Wt44Hf2JXYZdVHc5BEk4='::text)
+  ->  Index Scan using idx_pendaftaran_nik_all on pendaftaran_tte  (cost=0.42..8.44 rows=1 width=2501) (actual time=0.049..0.050 rows=1 loops=1)
+        Index Cond: ((nik)::text = '+QWRuoWzGcQS1HOzwvZ7uk5zRWosoIak3vDmjMJxLXg='::text)
         Filter: ((status)::text = 'MENUNGGU_VERIFIKASI'::text)
         Buffers: shared hit=4
-Planning Time: 0.132 ms
-Execution Time: 0.121 ms
+Planning Time: 0.177 ms
+Execution Time: 0.163 ms
 
 ----------------------------------------------------------------------------------------------------
 
 ### [Query D] Query D: Jalur Terpisah Exact-Match NIK (status != DITOLAK / Indeks Parsial)
-Deskripsi: Jalur terpisah exact-match NIK dengan predikat status != DITOLAK
-SQL: SELECT * FROM pendaftaran_tte WHERE status != 'DITOLAK' AND nik = ? LIMIT 15
-Repetisi: 5x | Min: 0.111 ms | Max: 0.248 ms | Mean: 0.164 ms | Median: 0.149 ms
-Buffers (Median Run): Shared Hit=8, Shared Read=0
-PLAN:
-Limit  (cost=0.42..8.44 rows=1 width=2487) (actual time=0.038..0.040 rows=1 loops=1)
+Deskripsi   : Jalur terpisah exact-match NIK dengan predikat status != DITOLAK
+SQL         : SELECT * FROM pendaftaran_tte WHERE status != 'DITOLAK' AND nik = ? LIMIT 15
+Evaluasi    : 30 target acak (Seed: 20261116)
+Statistik   : Min: 0.073 ms | Max: 0.171 ms | Mean: 0.106 ms | Median: 0.099 ms | SD: 0.027 ms
+Root Buffer : Shared Hit=4, Shared Read=0 (Diambil langsung dari Root Plan Node)
+[ILUSTRASI PLAN TEXT - SINGLE RUN BUKAN DARI MEDIAN AGREGAT]:
+Limit  (cost=0.42..8.44 rows=1 width=2501) (actual time=0.044..0.047 rows=1 loops=1)
   Buffers: shared hit=4
-  ->  Index Scan using idx_pendaftaran_nik_active on pendaftaran_tte  (cost=0.42..8.44 rows=1 width=2487) (actual time=0.037..0.038 rows=1 loops=1)
-        Index Cond: ((nik)::text = 'LY7AuiGCoGuT76o6AJ8Yr1/Wt44Hf2JXYZdVHc5BEk4='::text)
+  ->  Index Scan using idx_pendaftaran_nik_active on pendaftaran_tte  (cost=0.42..8.44 rows=1 width=2501) (actual time=0.043..0.045 rows=1 loops=1)
+        Index Cond: ((nik)::text = '+QWRuoWzGcQS1HOzwvZ7uk5zRWosoIak3vDmjMJxLXg='::text)
         Buffers: shared hit=4
-Planning Time: 0.168 ms
-Execution Time: 0.164 ms
+Planning Time: 0.146 ms
+Execution Time: 0.154 ms
 
 ----------------------------------------------------------------------------------------------------
 
 ### [Query E] Query E: Jalur Terpisah Exact-Match NIP (status = MENUNGGU_VERIFIKASI)
-Deskripsi: Jalur terpisah exact-match NIP 18 digit pada data aktif
-SQL: SELECT * FROM pendaftaran_tte WHERE status = 'MENUNGGU_VERIFIKASI' AND nip = ? LIMIT 15
-Repetisi: 5x | Min: 0.123 ms | Max: 0.158 ms | Mean: 0.137 ms | Median: 0.132 ms
-Buffers (Median Run): Shared Hit=8, Shared Read=0
-PLAN:
-Limit  (cost=0.42..8.44 rows=1 width=2487) (actual time=0.048..0.049 rows=1 loops=1)
+Deskripsi   : Jalur terpisah exact-match NIP 18 digit pada data aktif
+SQL         : SELECT * FROM pendaftaran_tte WHERE status = 'MENUNGGU_VERIFIKASI' AND nip = ? LIMIT 15
+Evaluasi    : 30 target acak (Seed: 20261116)
+Statistik   : Min: 0.100 ms | Max: 0.188 ms | Mean: 0.121 ms | Median: 0.114 ms | SD: 0.021 ms
+Root Buffer : Shared Hit=4, Shared Read=0 (Diambil langsung dari Root Plan Node)
+[ILUSTRASI PLAN TEXT - SINGLE RUN BUKAN DARI MEDIAN AGREGAT]:
+Limit  (cost=0.42..8.44 rows=1 width=2501) (actual time=0.051..0.053 rows=1 loops=1)
   Buffers: shared hit=4
-  ->  Index Scan using idx_pendaftaran_nip_all on pendaftaran_tte  (cost=0.42..8.44 rows=1 width=2487) (actual time=0.047..0.048 rows=1 loops=1)
-        Index Cond: ((nip)::text = 'JBKTgF3lomN8D9cwSoqQihV6oqDdLQKur7M9m8ePr4c='::text)
+  ->  Index Scan using idx_pendaftaran_nip_all on pendaftaran_tte  (cost=0.42..8.44 rows=1 width=2501) (actual time=0.050..0.051 rows=1 loops=1)
+        Index Cond: ((nip)::text = 'Cuswhdt+yd71SDrjp/BI8KKzMstNMv6jjEX7wWumP6g='::text)
         Filter: ((status)::text = 'MENUNGGU_VERIFIKASI'::text)
         Buffers: shared hit=4
-Planning Time: 0.138 ms
-Execution Time: 0.145 ms
+Planning Time: 0.199 ms
+Execution Time: 0.173 ms
 
 ----------------------------------------------------------------------------------------------------
 
 ### [Query F] Query F: Jalur Terpisah Pencarian Teks Murni (ILIKE nama/ref dengan wildcard escaping)
-Deskripsi: Jalur terpisah pencarian teks dengan sanitasi wildcard
-SQL: SELECT * FROM pendaftaran_tte WHERE status = 'MENUNGGU_VERIFIKASI' AND (nama_lengkap ILIKE ? OR nomor_referensi ILIKE ?) ORDER BY created_at ASC LIMIT 15
-Repetisi: 5x | Min: 106.332 ms | Max: 264.385 ms | Mean: 170.589 ms | Median: 181.576 ms
-Buffers (Median Run): Shared Hit=15038, Shared Read=0
-PLAN:
-Limit  (cost=5433.25..5434.42 rows=10 width=2487) (actual time=110.582..116.034 rows=1 loops=1)
-  Buffers: shared hit=3778
-  ->  Gather Merge  (cost=5433.25..5434.42 rows=10 width=2487) (actual time=110.580..116.030 rows=1 loops=1)
+Deskripsi   : Jalur terpisah pencarian teks dengan sanitasi wildcard
+SQL         : SELECT * FROM pendaftaran_tte WHERE status = 'MENUNGGU_VERIFIKASI' AND (nama_lengkap ILIKE ? OR nomor_referensi ILIKE ?) ORDER BY created_at ASC LIMIT 15
+Evaluasi    : 30 target acak (Seed: 20261116)
+Statistik   : Min: 170.810 ms | Max: 919.302 ms | Mean: 302.527 ms | Median: 241.523 ms | SD: 163.011 ms
+Root Buffer : Shared Hit=3924, Shared Read=0 (Diambil langsung dari Root Plan Node)
+[ILUSTRASI PLAN TEXT - SINGLE RUN BUKAN DARI MEDIAN AGREGAT]:
+Limit  (cost=5579.25..5580.42 rows=10 width=2501) (actual time=353.410..398.475 rows=15 loops=1)
+  Buffers: shared hit=3924
+  ->  Gather Merge  (cost=5579.25..5580.42 rows=10 width=2501) (actual time=353.408..398.469 rows=15 loops=1)
         Workers Planned: 2
         Workers Launched: 2
-        Buffers: shared hit=3778
-        ->  Sort  (cost=4433.22..4433.24 rows=5 width=2487) (actual time=98.391..98.392 rows=0 loops=3)
+        Buffers: shared hit=3924
+        ->  Sort  (cost=4579.22..4579.24 rows=5 width=2501) (actual time=337.844..337.846 rows=9 loops=3)
               Sort Key: created_at
-              Sort Method: quicksort  Memory: 25kB
-              Buffers: shared hit=3778
-              Worker 0:  Sort Method: quicksort  Memory: 25kB
-              Worker 1:  Sort Method: quicksort  Memory: 25kB
-              ->  Parallel Seq Scan on pendaftaran_tte  (cost=0.00..4433.17 rows=5 width=2487) (actual time=76.226..98.193 rows=0 loops=3)
-                    Filter: (((status)::text = 'MENUNGGU_VERIFIKASI'::text) AND (((nama_lengkap)::text ~~* '%Pegawai Simulasi Ke-30001%'::text) OR ((nomor_referensi)::text ~~* '%REF-BENCH-00030001%'::text)))
-                    Rows Removed by Filter: 33333
-                    Buffers: shared hit=3704
-Planning Time: 0.762 ms
-Execution Time: 116.236 ms
+              Sort Method: top-N heapsort  Memory: 32kB
+              Buffers: shared hit=3924
+              Worker 0:  Sort Method: quicksort  Memory: 38kB
+              Worker 1:  Sort Method: quicksort  Memory: 27kB
+              ->  Parallel Seq Scan on pendaftaran_tte  (cost=0.00..4579.17 rows=5 width=2501) (actual time=78.681..337.368 rows=22 loops=3)
+                    Filter: (((status)::text = 'MENUNGGU_VERIFIKASI'::text) AND (((nama_lengkap)::text ~~* '%Pegawai Kohort Ke-836%'::text) OR ((nomor_referensi)::text ~~* '%REF-BENCH-00000836%'::text)))
+                    Rows Removed by Filter: 33311
+                    Buffers: shared hit=3850
+Planning Time: 0.599 ms
+Execution Time: 398.693 ms
 
 ----------------------------------------------------------------------------------------------------
 
 ### [Query G] Query G: Jalur Terpisah Exact-Match NIK Tanpa Filter Status (Mencakup Semua Status)
-Deskripsi: Jalur terpisah exact-match NIK tanpa predikat status (memanfaatkan idx_pendaftaran_nik_all)
-SQL: SELECT * FROM pendaftaran_tte WHERE nik = ? LIMIT 15
-Repetisi: 5x | Min: 0.124 ms | Max: 0.236 ms | Mean: 0.159 ms | Median: 0.145 ms
-Buffers (Median Run): Shared Hit=8, Shared Read=0
-PLAN:
-Limit  (cost=0.42..8.44 rows=1 width=2487) (actual time=0.051..0.053 rows=1 loops=1)
+Deskripsi   : Jalur terpisah exact-match NIK tanpa predikat status (memanfaatkan idx_pendaftaran_nik_all)
+SQL         : SELECT * FROM pendaftaran_tte WHERE nik = ? LIMIT 15
+Evaluasi    : 30 target acak (Seed: 20261116)
+Statistik   : Min: 0.099 ms | Max: 7.805 ms | Mean: 0.471 ms | Median: 0.169 ms | SD: 1.372 ms
+Root Buffer : Shared Hit=4, Shared Read=0 (Diambil langsung dari Root Plan Node)
+[ILUSTRASI PLAN TEXT - SINGLE RUN BUKAN DARI MEDIAN AGREGAT]:
+Limit  (cost=0.42..8.44 rows=1 width=2501) (actual time=0.211..0.219 rows=1 loops=1)
   Buffers: shared hit=4
-  ->  Index Scan using idx_pendaftaran_nik_all on pendaftaran_tte  (cost=0.42..8.44 rows=1 width=2487) (actual time=0.050..0.051 rows=1 loops=1)
-        Index Cond: ((nik)::text = 'LY7AuiGCoGuT76o6AJ8Yr1/Wt44Hf2JXYZdVHc5BEk4='::text)
+  ->  Index Scan using idx_pendaftaran_nik_all on pendaftaran_tte  (cost=0.42..8.44 rows=1 width=2501) (actual time=0.206..0.211 rows=1 loops=1)
+        Index Cond: ((nik)::text = '+QWRuoWzGcQS1HOzwvZ7uk5zRWosoIak3vDmjMJxLXg='::text)
         Buffers: shared hit=4
-Planning Time: 0.152 ms
-Execution Time: 0.336 ms
+Planning Time: 0.094 ms
+Execution Time: 0.753 ms
 
 ----------------------------------------------------------------------------------------------------
 
 ### [Query H] Query H: Pencarian Gabungan Dua Kolom Terenkripsi (nik = ? OR nip = ?)
-Deskripsi: Pencarian majemuk dua identitas terenkripsi (menguji BitmapOr)
-SQL: SELECT * FROM pendaftaran_tte WHERE (nik = ? OR nip = ?) LIMIT 15
-Repetisi: 5x | Min: 0.175 ms | Max: 0.305 ms | Mean: 0.219 ms | Median: 0.192 ms
-Buffers (Median Run): Shared Hit=26, Shared Read=0
-PLAN:
-Limit  (cost=8.85..16.74 rows=2 width=2487) (actual time=0.043..0.045 rows=1 loops=1)
+Deskripsi   : Pencarian majemuk dua identitas terenkripsi (menguji BitmapOr)
+SQL         : SELECT * FROM pendaftaran_tte WHERE (nik = ? OR nip = ?) LIMIT 15
+Evaluasi    : 30 target acak (Seed: 20261116)
+Statistik   : Min: 0.106 ms | Max: 0.439 ms | Mean: 0.182 ms | Median: 0.146 ms | SD: 0.092 ms
+Root Buffer : Shared Hit=7, Shared Read=0 (Diambil langsung dari Root Plan Node)
+[ILUSTRASI PLAN TEXT - SINGLE RUN BUKAN DARI MEDIAN AGREGAT]:
+Limit  (cost=8.85..16.74 rows=2 width=2501) (actual time=0.132..0.134 rows=1 loops=1)
   Buffers: shared hit=7
-  ->  Bitmap Heap Scan on pendaftaran_tte  (cost=8.85..16.74 rows=2 width=2487) (actual time=0.042..0.044 rows=1 loops=1)
-        Recheck Cond: (((nik)::text = 'LY7AuiGCoGuT76o6AJ8Yr1/Wt44Hf2JXYZdVHc5BEk4='::text) OR ((nip)::text = 'JBKTgF3lomN8D9cwSoqQihV6oqDdLQKur7M9m8ePr4c='::text))
+  ->  Bitmap Heap Scan on pendaftaran_tte  (cost=8.85..16.74 rows=2 width=2501) (actual time=0.130..0.132 rows=1 loops=1)
+        Recheck Cond: (((nik)::text = '+QWRuoWzGcQS1HOzwvZ7uk5zRWosoIak3vDmjMJxLXg='::text) OR ((nip)::text = 'Cuswhdt+yd71SDrjp/BI8KKzMstNMv6jjEX7wWumP6g='::text))
         Heap Blocks: exact=1
         Buffers: shared hit=7
-        ->  BitmapOr  (cost=8.85..8.85 rows=2 width=0) (actual time=0.029..0.030 rows=0 loops=1)
+        ->  BitmapOr  (cost=8.85..8.85 rows=2 width=0) (actual time=0.122..0.122 rows=0 loops=1)
               Buffers: shared hit=6
-              ->  Bitmap Index Scan on idx_pendaftaran_nik_all  (cost=0.00..4.43 rows=1 width=0) (actual time=0.020..0.020 rows=1 loops=1)
-                    Index Cond: ((nik)::text = 'LY7AuiGCoGuT76o6AJ8Yr1/Wt44Hf2JXYZdVHc5BEk4='::text)
+              ->  Bitmap Index Scan on idx_pendaftaran_nik_all  (cost=0.00..4.43 rows=1 width=0) (actual time=0.112..0.112 rows=1 loops=1)
+                    Index Cond: ((nik)::text = '+QWRuoWzGcQS1HOzwvZ7uk5zRWosoIak3vDmjMJxLXg='::text)
                     Buffers: shared hit=3
-              ->  Bitmap Index Scan on idx_pendaftaran_nip_all  (cost=0.00..4.43 rows=1 width=0) (actual time=0.008..0.008 rows=1 loops=1)
-                    Index Cond: ((nip)::text = 'JBKTgF3lomN8D9cwSoqQihV6oqDdLQKur7M9m8ePr4c='::text)
+              ->  Bitmap Index Scan on idx_pendaftaran_nip_all  (cost=0.00..4.43 rows=1 width=0) (actual time=0.009..0.009 rows=1 loops=1)
+                    Index Cond: ((nip)::text = 'Cuswhdt+yd71SDrjp/BI8KKzMstNMv6jjEX7wWumP6g='::text)
                     Buffers: shared hit=3
-Planning Time: 0.133 ms
-Execution Time: 0.231 ms
+Planning Time: 0.135 ms
+Execution Time: 0.299 ms
+
+----------------------------------------------------------------------------------------------------
+
+### [Control K1] Kontrol K1: Query G dengan idx_pendaftaran_nik_all di-drop (Ablasi Indeks)
+Deskripsi   : Menilai dampak ketiadaan indeks universal pada pencarian exact-match NIK
+SQL         : SELECT * FROM pendaftaran_tte WHERE nik = ? LIMIT 15
+Evaluasi    : 30 target acak (Seed: 20261116)
+Statistik   : Min: 11.091 ms | Max: 38.069 ms | Mean: 20.501 ms | Median: 19.164 ms | SD: 6.189 ms
+Root Buffer : Shared Hit=3850, Shared Read=0 (Node Akar)
+[ILUSTRASI PLAN TEXT - SINGLE RUN BUKAN DARI MEDIAN AGREGAT]:
+Limit  (cost=0.00..5100.00 rows=1 width=2501) (actual time=0.637..20.189 rows=1 loops=1)
+  Buffers: shared hit=3850
+  ->  Seq Scan on pendaftaran_tte  (cost=0.00..5100.00 rows=1 width=2501) (actual time=0.633..20.184 rows=1 loops=1)
+        Filter: ((nik)::text = '+QWRuoWzGcQS1HOzwvZ7uk5zRWosoIak3vDmjMJxLXg='::text)
+        Rows Removed by Filter: 99999
+        Buffers: shared hit=3850
+Planning Time: 0.225 ms
+Execution Time: 20.311 ms
 
 ----------------------------------------------------------------------------------------------------
 

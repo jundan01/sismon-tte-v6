@@ -7,9 +7,9 @@
             "Startup Cost": 0.42,
             "Total Cost": 8.44,
             "Plan Rows": 1,
-            "Plan Width": 2487,
-            "Actual Startup Time": 0.042,
-            "Actual Total Time": 0.044,
+            "Plan Width": 2501,
+            "Actual Startup Time": 0.056,
+            "Actual Total Time": 0.058,
             "Actual Rows": 1,
             "Actual Loops": 1,
             "Shared Hit Blocks": 4,
@@ -35,12 +35,12 @@
                     "Startup Cost": 0.42,
                     "Total Cost": 8.44,
                     "Plan Rows": 1,
-                    "Plan Width": 2487,
-                    "Actual Startup Time": 0.041,
-                    "Actual Total Time": 0.042,
+                    "Plan Width": 2501,
+                    "Actual Startup Time": 0.054,
+                    "Actual Total Time": 0.055,
                     "Actual Rows": 1,
                     "Actual Loops": 1,
-                    "Index Cond": "((nik)::text = 'LY7AuiGCoGuT76o6AJ8Yr1\/Wt44Hf2JXYZdVHc5BEk4='::text)",
+                    "Index Cond": "((nik)::text = 'mw3gdK3zaAfrAtjSw9yXmqyWnkxqK4M+UoCwq6Nk1S4='::text)",
                     "Rows Removed by Index Recheck": 0,
                     "Shared Hit Blocks": 4,
                     "Shared Read Blocks": 0,
@@ -67,8 +67,8 @@
             "Temp Read Blocks": 0,
             "Temp Written Blocks": 0
         },
-        "Planning Time": 0.157,
+        "Planning Time": 0.142,
         "Triggers": [],
-        "Execution Time": 0.145
+        "Execution Time": 0.169
     }
 ]

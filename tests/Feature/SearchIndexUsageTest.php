@@ -25,6 +25,11 @@ class SearchIndexUsageTest extends TestCase
     {
         parent::setUp();
 
+        // Guard integritas: pengujian ini HANYA boleh berjalan pada database tte_testing
+        if (DB::getDatabaseName() !== 'tte_testing') {
+            $this->markTestSkipped('Pengujian ini HANYA diizinkan berjalan pada database tte_testing, terdeteksi: ' . DB::getDatabaseName());
+        }
+
         $this->superadmin = User::firstOrCreate(
             ['email' => 'admin@cirebonkota.go.id'],
             [

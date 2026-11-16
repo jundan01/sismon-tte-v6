@@ -7,9 +7,9 @@
             "Startup Cost": 0.42,
             "Total Cost": 8.44,
             "Plan Rows": 1,
-            "Plan Width": 2487,
-            "Actual Startup Time": 0.037,
-            "Actual Total Time": 0.038,
+            "Plan Width": 2501,
+            "Actual Startup Time": 0.039,
+            "Actual Total Time": 0.041,
             "Actual Rows": 1,
             "Actual Loops": 1,
             "Shared Hit Blocks": 4,
@@ -35,12 +35,12 @@
                     "Startup Cost": 0.42,
                     "Total Cost": 8.44,
                     "Plan Rows": 1,
-                    "Plan Width": 2487,
-                    "Actual Startup Time": 0.036,
-                    "Actual Total Time": 0.036,
+                    "Plan Width": 2501,
+                    "Actual Startup Time": 0.037,
+                    "Actual Total Time": 0.039,
                     "Actual Rows": 1,
                     "Actual Loops": 1,
-                    "Index Cond": "((nip)::text = 'JBKTgF3lomN8D9cwSoqQihV6oqDdLQKur7M9m8ePr4c='::text)",
+                    "Index Cond": "((nip)::text = 'zmVCWtGJquTpymDuB7Z8FPnzIvW\/1CrCAaqCt1cF3Ho='::text)",
                     "Rows Removed by Index Recheck": 0,
                     "Filter": "((status)::text = 'MENUNGGU_VERIFIKASI'::text)",
                     "Rows Removed by Filter": 0,
@@ -69,8 +69,8 @@
             "Temp Read Blocks": 0,
             "Temp Written Blocks": 0
         },
-        "Planning Time": 0.177,
+        "Planning Time": 0.131,
         "Triggers": [],
-        "Execution Time": 0.132
+        "Execution Time": 0.114
     }
 ]

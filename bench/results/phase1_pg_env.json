@@ -3,5 +3,20 @@
     "shared_buffers": "128MB",
     "work_mem": "4MB",
     "effective_cache_size": "4GB",
-    "random_page_cost": "4"
+    "random_page_cost": "4",
+    "host_specs": {
+        "cpu": "Intel(R) Core(TM) i5-7300U CPU @ 2.60GHz (2 cores, 4 threads)",
+        "ram": "15.88 GB",
+        "os": "Windows 10\/11 x64",
+        "docker_engine": "Docker 29.9.3, build 5457199",
+        "docker_desktop": "Docker Desktop 4.99.0",
+        "wsl2_kernel": "WSL version 3.0.5.0, Kernel 6.18.58.1-1"
+    },
+    "benchmark_metadata": {
+        "git_commit": "90075eec4774266db5c8f56ec57fe8efa64250a4",
+        "random_seed": 20261116,
+        "target_samples": 30,
+        "dataset_records": 100000,
+        "buffer_metric": "Root Plan Node (Shared Hit \/ Read Blocks), non-recursive"
+    }
 }
