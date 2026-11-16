@@ -46,10 +46,10 @@ class VerifikasiController extends Controller
                 // Jalur 1: Pencarian Identitas Sensitif Terenkripsi (Exact-Match via B-Tree Index)
                 // Memisahkan NIK (16 digit) dan NIP (18 digit) agar terhindar dari Seq Scan pada compound OR
                 if (strlen($digitsOnly) === 16 && preg_match('/^[\d\s\.\-]+$/', $trimmed)) {
-                    $encryptedNik = \App\Services\Security\CryptoHelper::encryptField($digitsOnly);
+                    $encryptedNik = \App\Services\Security\CryptoHelper::encryptField($digitsOnly, 'nik');
                     $q->where('nik', $encryptedNik);
                 } elseif (strlen($digitsOnly) === 18 && preg_match('/^[\d\s\.\-]+$/', $trimmed)) {
-                    $encryptedNip = \App\Services\Security\CryptoHelper::encryptField($digitsOnly);
+                    $encryptedNip = \App\Services\Security\CryptoHelper::encryptField($digitsOnly, 'nip');
                     $q->where('nip', $encryptedNip);
                 } else {
                     // Jalur 2: Pencarian Teks / Deskriptif Non-Eksak (Nama, Nomor Referensi, Deskripsi)

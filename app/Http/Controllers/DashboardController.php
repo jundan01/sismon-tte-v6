@@ -54,10 +54,10 @@ class DashboardController extends Controller
 
             // Jalur 1: Pencarian Identitas Sensitif Terenkripsi (Exact-Match via B-Tree Index)
             if (strlen($digitsOnly) === 16 && preg_match('/^[\d\s\.\-]+$/', $trimmed)) {
-                $encryptedNik = \App\Services\Security\CryptoHelper::encryptField($digitsOnly);
+                $encryptedNik = \App\Services\Security\CryptoHelper::encryptField($digitsOnly, 'nik');
                 $recentAntrianQuery->where('nik', $encryptedNik);
             } elseif (strlen($digitsOnly) === 18 && preg_match('/^[\d\s\.\-]+$/', $trimmed)) {
-                $encryptedNip = \App\Services\Security\CryptoHelper::encryptField($digitsOnly);
+                $encryptedNip = \App\Services\Security\CryptoHelper::encryptField($digitsOnly, 'nip');
                 $recentAntrianQuery->where('nip', $encryptedNip);
             } else {
                 // Jalur 2: Pencarian Teks / Deskriptif Non-Eksak

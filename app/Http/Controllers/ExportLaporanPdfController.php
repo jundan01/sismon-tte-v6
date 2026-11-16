@@ -90,8 +90,8 @@ class ExportLaporanPdfController extends Controller
 
         // Format dan dekripsi/masking identitas demi kepatuhan UU PDP
         $formattedRecords = $records->map(function ($row) {
-            $rawNik = CryptoHelper::decryptField($row->nik) ?? $row->nik;
-            $rawNip = !empty($row->nip) ? (CryptoHelper::decryptField($row->nip) ?? $row->nip) : null;
+            $rawNik = CryptoHelper::decryptField($row->nik, 'nik') ?? $row->nik;
+            $rawNip = !empty($row->nip) ? (CryptoHelper::decryptField($row->nip, 'nip') ?? $row->nip) : null;
 
             $maskedNik = $rawNik ? (strlen($rawNik) >= 8 ? substr($rawNik, 0, 6) . '******' . substr($rawNik, -4) : $rawNik) : '-';
             $maskedNip = $rawNip ? (strlen($rawNip) >= 8 ? substr($rawNip, 0, 6) . '******' . substr($rawNip, -4) : $rawNip) : '-';

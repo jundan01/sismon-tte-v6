@@ -37,8 +37,8 @@ class SertifikatExpiringNotification extends Mailable
         $this->namaPemohon = $pendaftaran?->nama_lengkap ?? 'Pemilik Sertifikat TTE';
         $this->namaSkpd = $pendaftaran?->skpd?->nama_skpd ?? 'Pemerintah Kota Cirebon';
 
-        $rawNik = $pendaftaran?->nik ? (CryptoHelper::decryptField($pendaftaran->nik) ?? $pendaftaran->nik) : null;
-        $rawNip = $pendaftaran?->nip ? (CryptoHelper::decryptField($pendaftaran->nip) ?? $pendaftaran->nip) : null;
+        $rawNik = $pendaftaran?->nik ? (CryptoHelper::decryptField($pendaftaran->nik, 'nik') ?? $pendaftaran->nik) : null;
+        $rawNip = $pendaftaran?->nip ? (CryptoHelper::decryptField($pendaftaran->nip, 'nip') ?? $pendaftaran->nip) : null;
 
         $this->maskedNik = $rawNik ? (strlen($rawNik) >= 8 ? substr($rawNik, 0, 6) . '******' . substr($rawNik, -4) : $rawNik) : '-';
         $this->maskedNip = $rawNip ? (strlen($rawNip) >= 8 ? substr($rawNip, 0, 6) . '******' . substr($rawNip, -4) : $rawNip) : '-';

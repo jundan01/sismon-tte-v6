@@ -1,0 +1,203 @@
+{
+    "Query_C": {
+        "query_label": "Query C (Separated NIK + Single Status)",
+        "target_count": 30,
+        "index_used": "idx_pendaftaran_nik_active",
+        "shared_hit_blocks": 4,
+        "shared_read_blocks": 0,
+        "execution_time_ms": {
+            "min": 0.054,
+            "max": 0.269,
+            "mean": 0.075,
+            "median": 0.059,
+            "p95": 0.105,
+            "p99": 0.269,
+            "sd": 0.04
+        },
+        "planning_time_ms": {
+            "mean": 0.14
+        },
+        "sample_plan_json": {
+            "Plan": {
+                "Node Type": "Index Scan",
+                "Parallel Aware": false,
+                "Async Capable": false,
+                "Scan Direction": "Forward",
+                "Index Name": "idx_pendaftaran_nik_active",
+                "Relation Name": "pendaftaran_tte",
+                "Alias": "pendaftaran_tte",
+                "Startup Cost": 0.42,
+                "Total Cost": 8.44,
+                "Plan Rows": 1,
+                "Plan Width": 2505,
+                "Actual Startup Time": 0.043,
+                "Actual Total Time": 0.044,
+                "Actual Rows": 1,
+                "Actual Loops": 1,
+                "Index Cond": "((nik)::text = 'AX7lqfDyqfGPvOpB1bbuM56zpPgBhMCxFHHRM2mfBVLE'::text)",
+                "Rows Removed by Index Recheck": 0,
+                "Filter": "((status)::text = 'MENUNGGU_VERIFIKASI'::text)",
+                "Rows Removed by Filter": 0,
+                "Shared Hit Blocks": 4,
+                "Shared Read Blocks": 0,
+                "Shared Dirtied Blocks": 0,
+                "Shared Written Blocks": 0,
+                "Local Hit Blocks": 0,
+                "Local Read Blocks": 0,
+                "Local Dirtied Blocks": 0,
+                "Local Written Blocks": 0,
+                "Temp Read Blocks": 0,
+                "Temp Written Blocks": 0
+            },
+            "Planning": {
+                "Shared Hit Blocks": 63,
+                "Shared Read Blocks": 0,
+                "Shared Dirtied Blocks": 0,
+                "Shared Written Blocks": 0,
+                "Local Hit Blocks": 0,
+                "Local Read Blocks": 0,
+                "Local Dirtied Blocks": 0,
+                "Local Written Blocks": 0,
+                "Temp Read Blocks": 0,
+                "Temp Written Blocks": 0
+            },
+            "Planning Time": 1.12,
+            "Triggers": [],
+            "Execution Time": 0.091
+        }
+    },
+    "Query_D": {
+        "query_label": "Query D (Separated NIK + Active Status IN)",
+        "target_count": 30,
+        "index_used": "idx_pendaftaran_nik_active",
+        "shared_hit_blocks": 4,
+        "shared_read_blocks": 0,
+        "execution_time_ms": {
+            "min": 0.055,
+            "max": 0.215,
+            "mean": 0.082,
+            "median": 0.068,
+            "p95": 0.199,
+            "p99": 0.215,
+            "sd": 0.038
+        },
+        "planning_time_ms": {
+            "mean": 0.166
+        },
+        "sample_plan_json": {
+            "Plan": {
+                "Node Type": "Index Scan",
+                "Parallel Aware": false,
+                "Async Capable": false,
+                "Scan Direction": "Forward",
+                "Index Name": "idx_pendaftaran_nik_active",
+                "Relation Name": "pendaftaran_tte",
+                "Alias": "pendaftaran_tte",
+                "Startup Cost": 0.42,
+                "Total Cost": 8.44,
+                "Plan Rows": 1,
+                "Plan Width": 2505,
+                "Actual Startup Time": 0.064,
+                "Actual Total Time": 0.066,
+                "Actual Rows": 1,
+                "Actual Loops": 1,
+                "Index Cond": "((nik)::text = 'AX7lqfDyqfGPvOpB1bbuM56zpPgBhMCxFHHRM2mfBVLE'::text)",
+                "Rows Removed by Index Recheck": 0,
+                "Filter": "((status)::text = ANY ('{MENUNGGU_VERIFIKASI,DISETUJUI}'::text[]))",
+                "Rows Removed by Filter": 0,
+                "Shared Hit Blocks": 4,
+                "Shared Read Blocks": 0,
+                "Shared Dirtied Blocks": 0,
+                "Shared Written Blocks": 0,
+                "Local Hit Blocks": 0,
+                "Local Read Blocks": 0,
+                "Local Dirtied Blocks": 0,
+                "Local Written Blocks": 0,
+                "Temp Read Blocks": 0,
+                "Temp Written Blocks": 0
+            },
+            "Planning": {
+                "Shared Hit Blocks": 48,
+                "Shared Read Blocks": 1,
+                "Shared Dirtied Blocks": 0,
+                "Shared Written Blocks": 0,
+                "Local Hit Blocks": 0,
+                "Local Read Blocks": 0,
+                "Local Dirtied Blocks": 0,
+                "Local Written Blocks": 0,
+                "Temp Read Blocks": 0,
+                "Temp Written Blocks": 0
+            },
+            "Planning Time": 0.969,
+            "Triggers": [],
+            "Execution Time": 0.095
+        }
+    },
+    "Query_G": {
+        "query_label": "Query G (Separated NIK + All Status \/ DITOLAK)",
+        "target_count": 30,
+        "index_used": "idx_pendaftaran_nik_all",
+        "shared_hit_blocks": 4,
+        "shared_read_blocks": 0,
+        "execution_time_ms": {
+            "min": 0.055,
+            "max": 0.126,
+            "mean": 0.078,
+            "median": 0.066,
+            "p95": 0.126,
+            "p99": 0.126,
+            "sd": 0.024
+        },
+        "planning_time_ms": {
+            "mean": 0.098
+        },
+        "sample_plan_json": {
+            "Plan": {
+                "Node Type": "Index Scan",
+                "Parallel Aware": false,
+                "Async Capable": false,
+                "Scan Direction": "Forward",
+                "Index Name": "idx_pendaftaran_nik_all",
+                "Relation Name": "pendaftaran_tte",
+                "Alias": "pendaftaran_tte",
+                "Startup Cost": 0.42,
+                "Total Cost": 8.44,
+                "Plan Rows": 1,
+                "Plan Width": 2505,
+                "Actual Startup Time": 0.064,
+                "Actual Total Time": 0.065,
+                "Actual Rows": 1,
+                "Actual Loops": 1,
+                "Index Cond": "((nik)::text = 'AfIZjkGK+vZA\/QWTlHd+snNn+LALktCTPdeQFuAO2yZH'::text)",
+                "Rows Removed by Index Recheck": 0,
+                "Filter": "((status)::text = 'DITOLAK'::text)",
+                "Rows Removed by Filter": 0,
+                "Shared Hit Blocks": 4,
+                "Shared Read Blocks": 0,
+                "Shared Dirtied Blocks": 0,
+                "Shared Written Blocks": 0,
+                "Local Hit Blocks": 0,
+                "Local Read Blocks": 0,
+                "Local Dirtied Blocks": 0,
+                "Local Written Blocks": 0,
+                "Temp Read Blocks": 0,
+                "Temp Written Blocks": 0
+            },
+            "Planning": {
+                "Shared Hit Blocks": 0,
+                "Shared Read Blocks": 0,
+                "Shared Dirtied Blocks": 0,
+                "Shared Written Blocks": 0,
+                "Local Hit Blocks": 0,
+                "Local Read Blocks": 0,
+                "Local Dirtied Blocks": 0,
+                "Local Written Blocks": 0,
+                "Temp Read Blocks": 0,
+                "Temp Written Blocks": 0
+            },
+            "Planning Time": 0.196,
+            "Triggers": [],
+            "Execution Time": 0.117
+        }
+    }
+}

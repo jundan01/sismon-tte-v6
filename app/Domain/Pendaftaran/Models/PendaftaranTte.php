@@ -84,46 +84,46 @@ class PendaftaranTte extends Model
     }
 
     /**
-     * Mutator NIK: Enkripsi deterministik AES-256-CBC dua arah.
+     * Mutator NIK: Enkripsi deterministik terautentikasi (DAE: SIV-CTR) dengan label kolom 'nik'.
      * Ref: SCHEMA.md §10
      */
     public function setNikAttribute(?string $value): void
     {
         if ($value !== null && $value !== '') {
-            $this->attributes['nik'] = \App\Services\Security\CryptoHelper::encryptField($value);
+            $this->attributes['nik'] = \App\Services\Security\CryptoHelper::encryptField($value, 'nik');
         } else {
             $this->attributes['nik'] = null;
         }
     }
 
     /**
-     * Mutator NIP: Enkripsi deterministik AES-256-CBC dua arah.
+     * Mutator NIP: Enkripsi deterministik terautentikasi (DAE: SIV-CTR) dengan label kolom 'nip'.
      * Mendukung null bagi pegawai Non-ASN.
      * Ref: SCHEMA.md §10
      */
     public function setNipAttribute(?string $value): void
     {
         if ($value !== null && $value !== '') {
-            $this->attributes['nip'] = \App\Services\Security\CryptoHelper::encryptField($value);
+            $this->attributes['nip'] = \App\Services\Security\CryptoHelper::encryptField($value, 'nip');
         } else {
             $this->attributes['nip'] = null;
         }
     }
 
     /**
-     * Accessor NIK: Dekripsi otomatis.
+     * Accessor NIK: Dekripsi otomatis (Dual-Read: v1 SIV-CTR dan fallback v0 CBC).
      */
     public function getNikAttribute(?string $value): ?string
     {
-        return \App\Services\Security\CryptoHelper::decryptField($value);
+        return \App\Services\Security\CryptoHelper::decryptField($value, 'nik');
     }
 
     /**
-     * Accessor NIP: Dekripsi otomatis.
+     * Accessor NIP: Dekripsi otomatis (Dual-Read: v1 SIV-CTR dan fallback v0 CBC).
      */
     public function getNipAttribute(?string $value): ?string
     {
-        return \App\Services\Security\CryptoHelper::decryptField($value);
+        return \App\Services\Security\CryptoHelper::decryptField($value, 'nip');
     }
 
     // ── Relasi ──────────────────────────────────────────────────

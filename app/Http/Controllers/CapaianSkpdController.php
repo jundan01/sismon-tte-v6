@@ -557,7 +557,7 @@ class CapaianSkpdController extends Controller
                     $no,
                     $row->nomor_referensi,
                     $row->nama_lengkap,
-                    \App\Services\Security\CryptoHelper::decryptField($row->nip),
+                    \App\Services\Security\CryptoHelper::decryptField($row->nip, 'nip'),
                     $skpd->nama_skpd,
                     'PENEMPATAN',
                     $row->deskripsi ?? 'Kantor Induk',

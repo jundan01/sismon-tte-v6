@@ -268,7 +268,7 @@ class SearchIndexUsageTest extends TestCase
         $this->assertStringContainsString('Index Scan', $planString, 'Data DITOLAK harus menggunakan Index Scan.');
 
         // Uji query langsung pada NIK tanpa status filter untuk membuktikan index idx_pendaftaran_nik_all bekerja mulus
-        $encryptedNik = CryptoHelper::encryptField($rejectedNik);
+        $encryptedNik = CryptoHelper::encryptField($rejectedNik, 'nik');
         $explainDirect = DB::select("EXPLAIN (FORMAT JSON) SELECT id, nama_lengkap, nik, status FROM pendaftaran_tte WHERE nik = ?", [$encryptedNik]);
         $directPlanString = json_encode(json_decode($explainDirect[0]->{'QUERY PLAN'}, true));
         $this->assertStringContainsString('Index Scan', $directPlanString);

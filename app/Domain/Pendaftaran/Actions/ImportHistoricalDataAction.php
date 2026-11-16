@@ -133,7 +133,7 @@ class ImportHistoricalDataAction
             }
 
             // Cek Duplikasi NIK aktif (Anti-Collision)
-            $encryptedNik = CryptoHelper::encryptField($rawNik);
+            $encryptedNik = CryptoHelper::encryptField($rawNik, 'nik');
             $existingPendaftaran = PendaftaranTte::where('nik', $encryptedNik)
                 ->where('status', '!=', 'DITOLAK')
                 ->first();

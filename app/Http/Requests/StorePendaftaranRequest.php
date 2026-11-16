@@ -114,7 +114,7 @@ class StorePendaftaranRequest extends FormRequest
             $nip = $this->input('nip');
 
             if ($nik && strlen($nik) === 16) {
-                $nikEncrypted = CryptoHelper::encryptField($nik);
+                $nikEncrypted = CryptoHelper::encryptField($nik, 'nik');
                 $isNikActive = PendaftaranTte::where('nik', $nikEncrypted)
                     ->where('status', '!=', 'DITOLAK')
                     ->exists();
@@ -125,7 +125,7 @@ class StorePendaftaranRequest extends FormRequest
             }
 
             if ($this->input('tipe_pegawai') !== 'NON_ASN' && !empty($nip) && strlen($nip) === 18) {
-                $nipEncrypted = CryptoHelper::encryptField($nip);
+                $nipEncrypted = CryptoHelper::encryptField($nip, 'nip');
                 $isNipActive = PendaftaranTte::where('nip', $nipEncrypted)
                     ->where('status', '!=', 'DITOLAK')
                     ->exists();
