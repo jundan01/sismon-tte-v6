@@ -1,0 +1,34 @@
+{
+    "measured_at": "2026-11-16T17:44:06+00:00",
+    "database": "tte_benchmark",
+    "dataset_records": 100000,
+    "schemes": {
+        "plaintext": {
+            "table_name": "bench_plain_100k",
+            "table_heap_bytes": 11124736,
+            "table_heap_mb": 10.61,
+            "index_name": "idx_plain_100k_nik_active",
+            "index_bytes": 3301376,
+            "index_mb": 3.15,
+            "total_relation_mb": 15.97
+        },
+        "dae_v1": {
+            "table_name": "bench_dae_100k",
+            "table_heap_bytes": 13975552,
+            "table_heap_mb": 13.33,
+            "index_name": "idx_dae_100k_nik_active",
+            "index_bytes": 5447680,
+            "index_mb": 5.2,
+            "total_relation_mb": 20.73
+        },
+        "blind_index": {
+            "table_name": "bench_bidx_100k",
+            "table_heap_bytes": 22364160,
+            "table_heap_mb": 21.33,
+            "index_name": "idx_bidx_100k_nik_active",
+            "index_bytes": 7667712,
+            "index_mb": 7.31,
+            "total_relation_mb": 30.85
+        }
+    }
+}

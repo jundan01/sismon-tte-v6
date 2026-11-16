@@ -274,4 +274,89 @@ class SearchIndexUsageTest extends TestCase
         $this->assertStringContainsString('Index Scan', $directPlanString);
         $this->assertStringContainsString('idx_pendaftaran_nik_all', $directPlanString, 'Pencarian NIK tanpa filter status harus memanfaatkan idx_pendaftaran_nik_all.');
     }
+
+    /**
+     * Uji 6: Kepatuhan Alur Bisnis (Business Workflow Compliance)
+     * (a) Pendaftaran kedua dengan NIK sama saat status masih MENUNGGU_VERIFIKASI ditolak oleh UniqueConstraint (idx_pendaftaran_nik_active).
+     * (b) Pendaftaran ulang dengan NIK sama berhasil jika record sebelumnya berstatus DITOLAK.
+     */
+    public function test_business_workflow_duplicate_nik_prevented_while_active_and_allowed_when_rejected(): void
+    {
+        $uniqueNik = '3274051212880005';
+        $uniqueNip = '198812122020121005';
+
+        // 1. Pendaftaran pertama berstatus aktif (MENUNGGU_VERIFIKASI)
+        $firstRecord = PendaftaranTte::create([
+            'uuid'                     => (string) Str::uuid(),
+            'nomor_referensi'          => 'REF-FLOW-ACTIVE-001',
+            'nama_lengkap'             => 'Pegawai Workflow Aktif',
+            'nik'                      => $uniqueNik,
+            'nip'                      => $uniqueNip,
+            'no_hp'                    => '081299990001',
+            'skpd_id'                  => $this->skpd->id,
+            'status'                   => 'MENUNGGU_VERIFIKASI',
+            'status_memiliki_email'    => false,
+            'is_email_recap_confirmed' => false,
+            'tipe_pegawai'             => 'ASN',
+            'deskripsi'                => 'Pendaftaran awal aktif',
+        ]);
+        $this->assertNotNull($firstRecord->id);
+
+        // 2. (a) Pendaftaran kedua dengan NIK sama saat status masih aktif HARUS ditolak oleh UniqueConstraint basis data
+        $duplicateRejected = false;
+        try {
+            DB::transaction(function () use ($uniqueNik) {
+                PendaftaranTte::create([
+                    'uuid'                     => (string) Str::uuid(),
+                    'nomor_referensi'          => 'REF-FLOW-DUPLICATE-002',
+                    'nama_lengkap'             => 'Pegawai Duplikat NIK',
+                    'nik'                      => $uniqueNik,
+                    'nip'                      => '198812122020121006',
+                    'no_hp'                    => '081299990002',
+                    'skpd_id'                  => $this->skpd->id,
+                    'status'                   => 'MENUNGGU_VERIFIKASI',
+                    'status_memiliki_email'    => false,
+                    'is_email_recap_confirmed' => false,
+                    'tipe_pegawai'             => 'ASN',
+                    'deskripsi'                => 'Upaya pendaftaran ganda saat aktif',
+                ]);
+            });
+        } catch (\Throwable $e) {
+            // PostgreSQL SQLSTATE 23505 = Unique Violation
+            $duplicateRejected = str_contains($e->getMessage(), 'idx_pendaftaran_nik_active')
+                || str_contains($e->getMessage(), '23505')
+                || str_contains(strtolower($e->getMessage()), 'unique');
+        }
+
+        $this->assertTrue($duplicateRejected, 'Pendaftaran kedua dengan NIK sama saat status masih aktif harus memicu pelanggaran konstrain unik idx_pendaftaran_nik_active.');
+
+        // 3. Ubah status pendaftaran pertama menjadi DITOLAK
+        $firstRecord->update(['status' => 'DITOLAK', 'catatan_penolakan' => 'Berkas belum lengkap']);
+        $this->assertEquals('DITOLAK', $firstRecord->fresh()->status);
+
+        // 4. (b) Pendaftaran ulang dengan NIK sama setelah record lama DITOLAK HARUS berhasil
+        $reRegistrationRecord = PendaftaranTte::create([
+            'uuid'                     => (string) Str::uuid(),
+            'nomor_referensi'          => 'REF-FLOW-REAPPLY-003',
+            'nama_lengkap'             => 'Pegawai Daftar Ulang Pasca Tolak',
+            'nik'                      => $uniqueNik,
+            'nip'                      => $uniqueNip,
+            'no_hp'                    => '081299990003',
+            'skpd_id'                  => $this->skpd->id,
+            'status'                   => 'MENUNGGU_VERIFIKASI',
+            'status_memiliki_email'    => false,
+            'is_email_recap_confirmed' => false,
+            'tipe_pegawai'             => 'ASN',
+            'deskripsi'                => 'Pendaftaran ulang pasca perbaikan berkas',
+        ]);
+
+        $this->assertNotNull($reRegistrationRecord->id, 'Pendaftaran ulang dengan NIK sama setelah ditolak harus berhasil disimpan.');
+        $this->assertEquals('MENUNGGU_VERIFIKASI', $reRegistrationRecord->status);
+        $this->assertEquals($uniqueNik, $reRegistrationRecord->nik);
+
+        // Verifikasi bahwa kedua record hidup berdampingan di database (1 DITOLAK, 1 MENUNGGU_VERIFIKASI)
+        $encryptedNik = CryptoHelper::encryptField($uniqueNik, 'nik');
+        $matchingCount = PendaftaranTte::where('nik', $encryptedNik)->count();
+        $this->assertEquals(2, $matchingCount, 'Tabel harus memuat 2 rekaman dengan NIK sama: satu DITOLAK dan satu MENUNGGU_VERIFIKASI.');
+    }
 }
