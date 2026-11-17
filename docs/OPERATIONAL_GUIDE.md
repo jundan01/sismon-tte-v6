@@ -185,8 +185,7 @@ docker compose exec -T postgres pg_restore -U postgres -d tte_monitoring /path/t
 
 ### A. Kredensial Default Superadmin
 Saat pertama kali inisialisasi database melalui seeder:
-- **Email Utama:** `admin@cirebonkota.go.id` (Password Default: `SuperAdmin2026!@#`)
-- **Email Penguji:** `ajriajundan@gmail.com` (Password Default: `Jundan12012005!@#`)
+- **Email Superadmin Utama:** `admin@cirebonkota.go.id` (Password Default: `SuperAdmin2026!@#`)
 - **Peran:** `superadmin`
 
 > [!IMPORTANT]

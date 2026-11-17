@@ -4,6 +4,16 @@
 /storage/*.key
 /storage/logs/*
 !/storage/logs/.gitkeep
+/storage/framework/cache/*
+!/storage/framework/cache/.gitkeep
+/storage/framework/sessions/*
+!/storage/framework/sessions/.gitkeep
+/storage/framework/testing/*
+!/storage/framework/testing/.gitkeep
+/storage/framework/views/*
+!/storage/framework/views/.gitkeep
+/storage/temp/*
+!/storage/temp/.gitkeep
 /vendor
 .env
 .env.backup
@@ -21,4 +31,3 @@ yarn-error.log
 
 # Microsoft Office lock files
 ~$*
-

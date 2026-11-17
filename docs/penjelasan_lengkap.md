@@ -1032,9 +1032,7 @@ Sebagai kelanjutan evaluasi dan kebutuhan operasional Diskominfo, pada rilis V5 
 
 | Nama Akun | Email Login | Password Default | Peran (Role) | Keterangan Operasional |
 | :--- | :--- | :--- | :---: | :--- |
-| **Superadmin Utama** | `admin@cirebonkota.go.id` | `SuperAdmin2026!@#` | `superadmin` | Akun resmi operasional Diskominfo Kota Cirebon |
-| **Akun Penguji** | `ajriajundan@gmail.com` | `Jundan12012005!@#` | `superadmin` | Akun pengujian & verifikasi sistem |
-| **Operator Persandian** | `operator@cirebonkota.go.id` | `Operator!2026#Sandi` | `superadmin` | Operator verifikasi berkas pendaftaran Tahap 1 |
+| **Superadmin Utama** | `admin@cirebonkota.go.id` | `SuperAdmin2026!@#` | `superadmin` | Akun resmi operasional DKIS Kota Cirebon |
 
 ---
 

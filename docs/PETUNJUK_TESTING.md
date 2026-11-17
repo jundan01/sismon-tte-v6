@@ -54,9 +54,7 @@ Basis data pengujian telah diisi dengan akun resmi dan master data unit kerja SK
 
 | Email Akun | Peran (Role) | Kata Sandi Default | Keterangan |
 | :--- | :---: | :---: | :--- |
-| **`admin@cirebonkota.go.id`** | superadmin | `SuperAdmin2026!@#` | Superadmin Persandian Diskominfo |
-| **`ajriajundan@gmail.com`** | superadmin | `Jundan12012005!@#` | **Akun Utama Penguji (Ajri Ajundan, S.Kom)** |
-| **`operator@cirebonkota.go.id`** | superadmin | `Operator!2026#Sandi` | Operator Layanan TTE |
+| **`admin@cirebonkota.go.id`** | superadmin | `SuperAdmin2026!@#` | Superadmin Persandian DKIS Kota Cirebon |
 
 ---
 
@@ -132,7 +130,7 @@ Lakukan pengujian sesuai dengan alur operasional resmi berikut:
 2. **Uji Akses Sah melalui VPN Gateway:**
    - Buka `http://localhost/gateway/login` -> Halaman login Superadmin terbuka dengan badge hijau:
      `[● JARINGAN VPN GATEWAY TERVERIFIKASI]`.
-   - Masukkan email: `ajriajundan@gmail.com` dan kata sandi: `Jundan12012005!@#` (atau `admin@cirebonkota.go.id` / `SuperAdmin2026!@#`).
+   - Masukkan email: `admin@cirebonkota.go.id` dan kata sandi: `SuperAdmin2026!@#`.
    - Klik **"Masuk ke Panel Kontrol"** -> Berhasil dialihkan ke Dashboard Admin.
 
 ---
@@ -180,7 +178,7 @@ Lakukan pengujian sesuai dengan alur operasional resmi berikut:
 
 ### Skenario 7: Setup TOTP MFA, Recovery Codes & Step-Up Deaktivasi
 1. Pada sidebar, klik **"Akun Superadmin & MFA"** (`/admin/master/users`).
-2. Klik tombol **"Aktifkan Google Authenticator (TOTP MFA)"** pada akun `ajriajundan@gmail.com`.
+2. Klik tombol **"Aktifkan Google Authenticator (TOTP MFA)"** pada akun `admin@cirebonkota.go.id`.
 3. Pindai QR Code menggunakan aplikasi Google Authenticator / Aegis di ponsel Anda.
 4. Masukkan 6 digit kode token dan konfirmasi -> Sistem menyimpan 8 kode pemulihan terenkripsi ke database (`mfa_recovery_codes`).
 5. **Uji Step-Up Authentication Nonaktifkan MFA:**
@@ -219,7 +217,7 @@ Lakukan pengujian sesuai dengan alur operasional resmi berikut:
 
 - [ ] Google reCAPTCHA key terpasang di `.env` (atau fallback Local Math CAPTCHA aktif).
 - [ ] HTTPS / SSL 2048-bit SAN aktif tanpa kegagalan handshake.
-- [ ] Login admin berhasil dengan akun `admin@cirebonkota.go.id` atau `ajriajundan@gmail.com`.
+- [ ] Login admin berhasil dengan akun `admin@cirebonkota.go.id`.
 - [ ] Seluruh data master SKPD & Jabatan termuat sempurna di tabel verifikasi dan dashboard.
 - [ ] Perlindungan VPN Gateway menolak akses non-VPN dengan respon 404 Stealth.
 - [ ] Verifikasi Tahap 1, Penerbitan Tahap 2, dan Ekspor CSV berjalan mulus tanpa error.

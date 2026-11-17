@@ -20,7 +20,7 @@ class DummyTestingDataSeeder extends Seeder
         $skpds = Skpd::all();
         $jabatans = MasterJabatanGolongan::where('kategori', 'JABATAN')->get();
         $golongans = MasterJabatanGolongan::where('kategori', 'GOLONGAN')->get();
-        $admin = User::where('email', 'ajriajundan@gmail.com')->first() ?: User::first();
+        $admin = User::where('email', 'admin@cirebonkota.go.id')->first() ?: User::first();
 
         if ($skpds->isEmpty() || $jabatans->isEmpty()) {
             return;

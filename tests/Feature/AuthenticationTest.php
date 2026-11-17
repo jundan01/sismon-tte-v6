@@ -18,7 +18,6 @@ class AuthenticationTest extends TestCase
         Config::set('vpn.enabled', true);
         Config::set('vpn.allowed_subnets', ['127.0.0.1/32', '::1/128', '10.0.0.0/8', '172.16.0.0/12', '192.168.0.0/16']);
         RateLimiter::clear('admin@cirebonkota.go.id|127.0.0.1');
-        RateLimiter::clear('operator@cirebonkota.go.id|127.0.0.1');
         RateLimiter::clear(sha1('login_limit|127.0.0.1'));
         RateLimiter::clear(sha1('general|127.0.0.1'));
     }

@@ -283,9 +283,7 @@ sudo supervisorctl start tte-audit-worker:*
 ### 3. Kredensial Akun Default (Hasil Seeder)
 | Nama Akun | Email Login | Password Default | Peran (Role) | Keterangan |
 | :--- | :--- | :--- | :---: | :--- |
-| **Superadmin Utama** | `admin@cirebonkota.go.id` | `SuperAdmin2026!@#` | `superadmin` | Akun resmi operasional DKIS |
-| **Akun Verifikator** | `operator@cirebonkota.go.id` | `Operator!2026#Sandi` | `superadmin` | Operator verifikasi berkas tahap 1 |
-| **Akun Penguji** | `ajriajundan@gmail.com` | `Jundan12012005!@#` | `superadmin` | Akun pengujian sistem |
+| **Superadmin Utama** | `admin@cirebonkota.go.id` | `SuperAdmin2026!@#` | `superadmin` | Akun resmi operasional DKIS Kota Cirebon |
 
 > [!IMPORTANT]
 > - Segera ganti kata sandi default dan aktifkan **Multi-Factor Authentication (TOTP)** melalui menu Manajemen Akun saat penerapan di server produksi.
