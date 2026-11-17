@@ -15,7 +15,7 @@ from lxml import etree
 TEMPLATE_PATH = r"DOKUMEN LAPORAN & ARTIKEL/template JIP (Jurnal Informatika Polinema).docx"
 OUTPUT_PATH = r"DOKUMEN LAPORAN & ARTIKEL/ARTIKEL_JIP_FINAL.docx"
 
-def set_cell_margins(cell, top=50, bottom=50, left=60, right=60):
+def set_cell_margins(cell, top=20, bottom=20, left=15, right=15):
     """Set inner margins (padding) for a table cell in dxa (1 pt = 20 dxa)."""
     tcPr = cell._tc.get_or_add_tcPr()
     tcMar = etree.SubElement(tcPr, '{http://schemas.openxmlformats.org/wordprocessingml/2006/main}tcMar')
@@ -110,9 +110,9 @@ def add_body_p(doc, text, space_after=4, indent=True, bold_prefix=None):
 
 def add_equation_box(doc, formula_lines, eq_num_str):
     """Add centered mathematical equation with right-aligned numbering using a borderless 2-column table."""
-    # 75mm column width = 4252 dxa. Col 0 = 65mm (~3685 dxa), Col 1 = 10mm (~567 dxa)
     table = doc.add_table(rows=1, cols=2)
     table.alignment = WD_TABLE_ALIGNMENT.CENTER
+    table.autofit = False
     tblPr = table._tbl.tblPr
     tblW = tblPr.find('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}tblW')
     if tblW is not None:
@@ -160,13 +160,12 @@ def add_equation_box(doc, formula_lines, eq_num_str):
     r_num.font.name = "Times New Roman"
     r_num.font.size = Pt(9.5)
 
-    # Empty spacer paragraph after equation table
     p_sp = doc.add_paragraph()
     p_sp.paragraph_format.space_before = Pt(0)
     p_sp.paragraph_format.space_after = Pt(2)
 
 def add_table_data(doc, caption, headers, rows, col_widths_mm, alignments=None, note=None):
-    """Add a professional academic table fitting the 75mm column width."""
+    """Add a professional academic table fitting the 75mm column width with autofit and 8.5pt font."""
     # Caption
     p_cap = doc.add_paragraph()
     p_cap.alignment = WD_ALIGN_PARAGRAPH.CENTER
@@ -175,12 +174,13 @@ def add_table_data(doc, caption, headers, rows, col_widths_mm, alignments=None, 
     p_cap.paragraph_format.keep_with_next = True
     r_cap = p_cap.add_run(caption)
     r_cap.font.name = "Times New Roman"
-    r_cap.font.size = Pt(8)
+    r_cap.font.size = Pt(8.5)
     r_cap.font.bold = True
 
     # Table
     table = doc.add_table(rows=len(rows) + 1, cols=len(headers))
     table.alignment = WD_TABLE_ALIGNMENT.CENTER
+    table.autofit = True
     tblPr = table._tbl.tblPr
     tblW = tblPr.find('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}tblW')
     if tblW is not None:
@@ -197,7 +197,7 @@ def add_table_data(doc, caption, headers, rows, col_widths_mm, alignments=None, 
     for i, h_text in enumerate(headers):
         cell = hdr_row.cells[i]
         cell.width = Mm(col_widths_mm[i])
-        set_cell_margins(cell, top=30, bottom=30, left=20, right=20)
+        set_cell_margins(cell, top=25, bottom=25, left=15, right=15)
         p = cell.paragraphs[0]
         p.alignment = WD_ALIGN_PARAGRAPH.CENTER
         p.paragraph_format.line_spacing = 1.0
@@ -205,7 +205,7 @@ def add_table_data(doc, caption, headers, rows, col_widths_mm, alignments=None, 
         p.paragraph_format.space_after = Pt(1)
         r = p.add_run(h_text)
         r.font.name = "Times New Roman"
-        r.font.size = Pt(7.5)
+        r.font.size = Pt(8.5)
         r.font.bold = True
 
     # Format Data Rows
@@ -215,7 +215,7 @@ def add_table_data(doc, caption, headers, rows, col_widths_mm, alignments=None, 
         for c_idx, val in enumerate(row_data):
             cell = row.cells[c_idx]
             cell.width = Mm(col_widths_mm[c_idx])
-            set_cell_margins(cell, top=20, bottom=20, left=20, right=20)
+            set_cell_margins(cell, top=20, bottom=20, left=15, right=15)
             p = cell.paragraphs[0]
             if alignments and c_idx < len(alignments):
                 p.alignment = alignments[c_idx]
@@ -226,9 +226,9 @@ def add_table_data(doc, caption, headers, rows, col_widths_mm, alignments=None, 
             p.paragraph_format.space_after = Pt(1)
             r = p.add_run(val)
             r.font.name = "Times New Roman"
-            r.font.size = Pt(7.5)
+            r.font.size = Pt(8.5)
             # Bold if it's the proposed DAE v1 or key finding
-            if "DAE v1" in val or "5.000" in val and c_idx == 3:
+            if "DAE v1" in val or ("5.000" in val and c_idx == 3):
                 r.font.bold = True
 
     # Note if present
@@ -239,7 +239,7 @@ def add_table_data(doc, caption, headers, rows, col_widths_mm, alignments=None, 
         p_note.paragraph_format.space_after = Pt(4)
         r_note = p_note.add_run(note)
         r_note.font.name = "Times New Roman"
-        r_note.font.size = Pt(7.5)
+        r_note.font.size = Pt(8)
         r_note.font.italic = True
     else:
         p_sp = doc.add_paragraph()
@@ -255,8 +255,6 @@ def add_reference(doc, text):
     p.paragraph_format.left_indent = Pt(14)
     p.paragraph_format.first_line_indent = Pt(-14)
     
-    # Handle italicization for journal / book titles
-    # Simple parser for *title*
     parts = text.split('*')
     for i, part in enumerate(parts):
         if not part:
@@ -264,7 +262,7 @@ def add_reference(doc, text):
         run = p.add_run(part)
         run.font.name = "Times New Roman"
         run.font.size = Pt(9)
-        if i % 2 == 1: # Odd index means inside *...*
+        if i % 2 == 1:
             run.font.italic = True
 
 def build_paper():
@@ -323,7 +321,7 @@ def build_paper():
     # Clear P6
     doc.paragraphs[6].text = ""
 
-    # 3. Update Affiliation (P8)
+    # 3. Update Affiliation (P8) with explicit line break between institution and street address
     p_aff = doc.paragraphs[8]
     p_aff.text = ""
     p_aff.alignment = WD_ALIGN_PARAGRAPH.CENTER
@@ -335,11 +333,18 @@ def build_paper():
     r_aff_sup.font.size = Pt(10)
     r_aff_sup.font.superscript = True
 
-    r_aff_txt = p_aff.add_run("Program Studi Manajemen Informatika, STMIK IKMI Cirebon\nJl. Perjuangan No. 10B, Karyamulya, Kec. Kesambi, Kota Cirebon, Jawa Barat 45131, Indonesia")
-    r_aff_txt.font.name = "Times New Roman"
-    r_aff_txt.font.size = Pt(10)
+    r_aff_inst = p_aff.add_run("Program Studi Manajemen Informatika, STMIK IKMI Cirebon")
+    r_aff_inst.font.name = "Times New Roman"
+    r_aff_inst.font.size = Pt(10)
 
-    # 4. Update Email (P9)
+    # Line break
+    p_aff.add_run().add_break()
+
+    r_aff_addr = p_aff.add_run("Jl. Perjuangan No. 10B, Karyamulya, Kec. Kesambi, Kota Cirebon, Jawa Barat 45131, Indonesia")
+    r_aff_addr.font.name = "Times New Roman"
+    r_aff_addr.font.size = Pt(10)
+
+    # 4. Update Email (P9) with explicit line break between email and corresponding author
     p_email = doc.paragraphs[9]
     p_email.text = ""
     p_email.alignment = WD_ALIGN_PARAGRAPH.CENTER
@@ -351,9 +356,16 @@ def build_paper():
     r_em_sup.font.size = Pt(10)
     r_em_sup.font.superscript = True
 
-    r_em_txt = p_email.add_run("ajriajundan123@gmail.com, baninurhakim@ikmi.ac.id\n*Penulis Korespondensi")
+    r_em_txt = p_email.add_run("ajriajundan123@gmail.com, baninurhakim@ikmi.ac.id")
     r_em_txt.font.name = "Times New Roman"
     r_em_txt.font.size = Pt(10)
+
+    # Line break
+    p_email.add_run().add_break()
+
+    r_em_corr = p_email.add_run("*Penulis Korespondensi")
+    r_em_corr.font.name = "Times New Roman"
+    r_em_corr.font.size = Pt(10)
 
     # Clear P10, P11, P12
     doc.paragraphs[10].text = ""
@@ -446,10 +458,11 @@ def build_paper():
         "Informatika, dan Statistik (DKIS) Kota Cirebon melalui aplikasi Sistem Monitoring Penerbitan Tanda Tangan Elektronik "
         "(Sismon-TTE), data identitas kependudukan aparatur sipil negara (ASN) berupa Nomor Induk Kependudukan (NIK) dan "
         "Nomor Induk Pegawai (NIP) diproses secara intensif untuk verifikasi sertifikat elektronik ke Balai Sertifikasi "
-        "Elektronik (BSrE) Badan Siber dan Sandi Negara (BSSN). Berlakunya Undang-Undang Republik Indonesia Nomor 27 Tahun 2022 "
-        "tentang Pelindungan Data Pribadi (UU PDP), khususnya Pasal 35 dan Pasal 39, mewajibkan pengendali data pribadi untuk "
-        "menerapkan langkah teknis enkripsi guna melindungi data pribadi spesifik dan umum dari akses tidak sah, kebocoran, "
-        "serta manipulasi data.", indent=False)
+        "Elektronik (BSrE) Badan Siber dan Sandi Negara (BSSN) guna mendukung efisiensi pelayanan publik dan tata kelola "
+        "keamanan aplikasi web pemerintahan (Arizal et al., 2026; Noor et al., 2021). Berlakunya Undang-Undang Republik "
+        "Indonesia Nomor 27 Tahun 2022 tentang Pelindungan Data Pribadi (UU PDP), khususnya Pasal 35 dan Pasal 39, mewajibkan "
+        "pengendali data pribadi untuk menerapkan langkah teknis dan operasional keamanan guna melindungi data pribadi, "
+        "di mana enkripsi merupakan kontrol teknis utama dari ancaman akses tidak sah, kebocoran, serta manipulasi data.", indent=False)
 
     add_body_p(doc,
         "Meskipun kewajiban hukum menuntut enkripsi data saat tersimpan (data-at-rest), implementasi enkripsi pada sistem basis "
@@ -457,22 +470,22 @@ def build_paper():
         "arsitektural antara keamanan kriptografi dan kinerja pencarian kueri (Carvalho et al., 2025; Trabucco et al., 2026). "
         "Standar enkripsi simetris modern terautentikasi (Authenticated Encryption with Associated Data/AEAD) seperti AES-256-GCM "
         "bersifat probabilistik, di mana setiap operasi enkripsi menghasilkan ciphertext yang berbeda secara acak berkat penggunaan "
-        "IV/nonce yang unik (Dworkin, 2001). Sifat probabilistik ini secara inheren menghancurkan relasi kesetaraan (equality mapping), "
+        "IV/nonce yang unik (Pina et al., 2024). Sifat probabilistik ini secara inheren menghancurkan relasi kesetaraan (equality mapping), "
         "sehingga klausul pencarian eksak SQL (WHERE nik = ?) tidak dapat memanfaatkan struktur indeks pohon B-Tree (Gui et al., 2024). "
         "Akibatnya, RDBMS terpaksa melakukan pemindaian tabel menyeluruh (Sequential Scan) atau aplikasi harus menarik seluruh baris "
         "ke memori untuk didekripsi satu per satu (In-Memory Full Decryption Scan), yang memicu degradasi komputasi linear O(N) dan "
-        "ledakan penggunaan memori (heap exhaustion) pada volume data besar (Pina et al., 2024).", indent=True)
+        "ledakan penggunaan memori (heap exhaustion) pada volume data besar (Carvalho et al., 2025).", indent=True)
 
     add_body_p(doc,
         "Untuk mempertahankan pemanfaatan indeks B-Tree berkecepatan O(log N), sejumlah sistem mengadopsi enkripsi deterministik "
-        "konvensional seperti AES-256-CBC dengan IV statis (Popa et al., 2011). Namun, penggunaan IV statis pada mode CBC membuka "
+        "konvensional seperti AES-256-CBC dengan IV statis (Bellare et al., 2007). Namun, penggunaan IV statis pada mode CBC membuka "
         "celah keamanan serius berupa kebocoran pola (pattern leakage). Karena ukuran blok AES adalah 16 byte (128 bit), dua rekaman "
-        "plaintext yang berbagi 16 karakter pertama yang sama akan menghasilkan blok ciphertext pertama yang identik (Naveed et al., 2015). "
-        "Pada format NIP di Indonesia yang terdiri atas 18 digit terstruktur (8 digit tanggal lahir + 6 digit TMT pengangkatan CPNS + "
-        "1 digit jenis kelamin + 3 digit nomor urut), ASN yang berada pada kohort formasi yang sama akan memiliki 14 hingga 16 digit "
-        "awal yang identik, sehingga penyerang yang memiliki akses ke media penyimpanan dapat menyimpulkan kesamaan tanggal lahir dan "
-        "instansi pegawai dengan menganalisis kesamaan blok ciphertext (Dou et al., 2024). Selain itu, skema deterministik tanpa tag "
-        "autentikasi rentan terhadap serangan manipulasi bit (bit-flipping attack) dan serangan lintas-kolom (cross-column replay attack), "
+        "plaintext yang berbagi 16 karakter pertama yang sama akan menghasilkan blok ciphertext pertama yang identik (Chen et al., 2024; "
+        "Dou et al., 2024). Pada format NIP di Indonesia yang terdiri atas 18 digit terstruktur (8 digit tanggal lahir + 6 digit TMT "
+        "pengangkatan CPNS + 1 digit jenis kelamin + 3 digit nomor urut), ASN yang berada pada kohort formasi yang sama akan memiliki "
+        "14 hingga 16 digit awal yang identik, sehingga penyerang yang memiliki akses ke media penyimpanan dapat menyimpulkan kesamaan "
+        "tanggal lahir dan instansi pegawai dengan menganalisis kesamaan blok ciphertext (Dou et al., 2024). Selain itu, skema deterministik "
+        "tanpa tag autentikasi rentan terhadap serangan manipulasi bit (bit-flipping attack) dan serangan lintas-kolom (cross-column replay attack), "
         "di mana ciphertext NIK dapat disuntikkan ke kolom NIP tanpa terdeteksi (Bellare et al., 2007).", indent=True)
 
     add_body_p(doc,
@@ -481,7 +494,7 @@ def build_paper():
         "untuk menyimpan digest HMAC sebagai indeks pencarian deterministik terpisah. Walaupun aman, arsitektur blind index menimbulkan "
         "konsekuensi penggandaan ruang penyimpanan (storage amplification), memicu penalti latensi ganda pada siklus penulisan (write "
         "overhead), serta memerlukan dekripsi kandidat tambahan pada setiap pencarian untuk memverifikasi potensi tabrakan hash "
-        "(Song et al., 2000; Curtmola et al., 2011).", indent=True)
+        "(Chen et al., 2024; Khan et al., 2025).", indent=True)
 
     add_body_p(doc,
         "Menjawab tantangan tersebut, penelitian ini merancang, mengimplementasikan, dan mengevaluasi skema Deterministic Authenticated "
@@ -550,7 +563,7 @@ def build_paper():
 
     add_body_p(doc,
         "1. Derivasi Sub-Kunci Independen (HKDF-SHA256): Dari kunci utama aplikasi K_master (256-bit), diturunkan dua sub-kunci "
-        "independen berukuran masing-masing 32 byte menggunakan fungsi derivasi berbasis HMAC (Krawczyk & Eronen, 2010):", indent=False)
+        "independen berukuran masing-masing 32 byte menggunakan fungsi derivasi kunci berbasis HMAC (HKDF):", indent=False)
 
     add_equation_box(doc, [
         "K_enc = HKDF-SHA256(K_master, salt=∅, info='sismon-tte:enc:v1', L=32)",
@@ -642,9 +655,9 @@ def build_paper():
     add_body_p(doc,
         "Tabel 1 merangkum perbandingan performa rencana eksekusi kueri pada tabel berukuran 100.000 baris. Kueri terpisah (Query C, D, dan G) "
         "yang memanfaatkan indeks B-Tree menghasilkan waktu eksekusi sub-milidetik (0,075–0,082 ms). Yang paling mendasar, node akar "
-        "kueri indeks B-Tree secara konsisten hanya membutuhkan tepat 4 Shared Hit Blocks (3 halaman internal traversal pohon B-Tree + "
-        "1 halaman heap tabel) dengan 0 Shared Read Blocks, yang membuktikan bahwa seluruh data terlayani sempurna dari memori buffer pool "
-        "tanpa ada aktivitas pembacaan fisik ke disk (zero disk thrashing).", indent=True)
+        "kueri indeks B-Tree secara konsisten hanya membutuhkan tepat 4 Shared Hit Blocks (traversal node indeks B-Tree dan pengambilan halaman heap tabel) "
+        "dengan 0 Shared Read Blocks, yang membuktikan bahwa seluruh data terlayani sempurna dari memori buffer pool tanpa ada aktivitas pembacaan "
+        "fisik ke disk (zero disk thrashing).", indent=True)
 
     add_body_p(doc,
         "Sebaliknya, pada pengujian Kontrol K1 di mana indeks sengaja dinonaktifkan, PostgreSQL beralih ke Parallel Sequential Scan yang "
@@ -784,7 +797,8 @@ def build_paper():
     ]
     t6_widths = [13, 11, 13, 13, 12, 13] # Sum = 75 mm
     add_table_data(doc, "Tabel 6. Ukuran Fisik Penyimpanan Tabel dan Indeks (N = 100.000)",
-                   t6_headers, t6_rows, t6_widths, note="Catatan: DAE v1 menghemat 32,8% total ruang penyimpanan dan 28,9% memori indeks dibandingkan blind index.")
+                   t6_headers, t6_rows, t6_widths, 
+                   note="Catatan: Total ukuran relasi mencakup heap tabel, indeks aktif, primary key, dan overhead metadata PostgreSQL. DAE v1 menghemat 32,8% total ruang penyimpanan dan 28,9% memori indeks dibandingkan blind index.")
 
     add_body_p(doc,
         "Dari Tabel 6, terungkap keunggulan efisiensi arsitektural skema DAE v1 dibandingkan blind indexing: Pertama, penghematan total "
@@ -839,24 +853,19 @@ def build_paper():
     add_heading_1(doc, "DAFTAR PUSTAKA")
     
     references = [
-        "Attia, A. F., & Horacek, P. (2001). Optimization of neuro-fuzzy modeling using genetic algorithm. In *Proceedings of the XXVI ASR 2001 Seminar: Instruments and Control* (pp. 5–15). VSB-Technical University of Ostrava.",
+        "Arizal, Hilal, M., & Priambodo, D. F. (2026). Security analysis of Indonesian region government web applications based on NIST SP 800-115 and WSTG v4.2. *Journal of Information Systems and Informatics*, 8(2), 1776–1799. https://doi.org/10.63158/journalisi.v8i2.1558",
         "Bellare, M., Boldyreva, A., & O'Neill, A. (2007). Deterministic and efficiently searchable encryption. In A. Menezes (Ed.), *Advances in Cryptology – CRYPTO 2007* (LNCS Vol. 4622, pp. 535–552). Springer. https://doi.org/10.1007/978-3-540-74143-5_30",
         "Carvalho, M., Sá, F., & Bernardino, J. (2025). Evaluation of the impact of AES encryption on query read performance across Oracle, MySQL, and SQL Server databases. *Cryptography*, 9(4), Article 77. https://doi.org/10.3390/cryptography9040077",
-        "Chen, R., Ge, F., Guo, F., Susilo, W., Xie, H., & Wei, G. (2024). Secure in-network keyword search with efficient verification in cloud-assisted Internet of Things. *IEEE Internet of Things Journal*, 11(16), 27364–27376. https://doi.org/10.1109/JIOT.2024.3392439",
-        "Curtmola, R., Garay, J., Kamara, S., & Ostrovsky, R. (2011). Searchable symmetric encryption: Improved definitions and efficient constructions. *Journal of Computer Security*, 19(5), 895–934. https://doi.org/10.3233/JCS-2011-0426",
+        "Chen, H., Yang, Y., & Lv, S. (2024). Revisiting frequency-smoothing encryption: new security definitions and efficient construction. *Cybersecurity*, 7(1). https://doi.org/10.1186/s42400-024-00208-w",
         "Dou, H., Dan, Z., Xu, P., Wang, W., Xu, S., Chen, T., & Jin, H. (2024). Dynamic searchable symmetric encryption with strong security and robustness. *IEEE Transactions on Information Forensics and Security*, 19, 2370–2384. https://doi.org/10.1109/TIFS.2024.3350330",
-        "Dworkin, M. (2001). *Recommendation for block cipher modes of operation: Methods and techniques* (NIST Special Publication 800-38A). National Institute of Standards and Technology. https://doi.org/10.6028/NIST.SP.800-38A",
         "Gui, Z., Paterson, K. G., Patranabis, S., & Warinschi, B. (2024). SWiSSSE: System-wide security for searchable symmetric encryption. *Proceedings on Privacy Enhancing Technologies*, 2024(1), 549–581. https://doi.org/10.56553/popets-2024-0032",
-        "Khan, A. N., Naveed, A., Mehmood, A., Arora, D., Khan, A. U. R., & Al-Ghamdi, M. S. (2025). FastSearch: Fast, scalable, and encrypted keyword search for cloud-assisted industrial IoT. *IEEE Internet of Things Journal*, 12(1), 845–855. https://doi.org/10.1109/JIOT.2024.3468972",
-        "Krawczyk, H., & Eronen, P. (2010). *HMAC-based extract-and-expand key derivation function (HKDF)* (RFC 5869). Internet Engineering Task Force. https://doi.org/10.17487/RFC5869",
-        "Naveed, M., Kamara, S., & Wright, C. V. (2015). Inference attacks on property-preserving encrypted databases. In *Proceedings of the 22nd ACM SIGSAC Conference on Computer and Communications Security* (pp. 644–655). Association for Computing Machinery. https://doi.org/10.1145/2810103.2813651",
-        "Pina, L., Silva, S. A. G. O., Silva, S. R. G. O., Silva, E. C. B., Silva, S. F. T., Silva, M. T. A., Santos, E. P., & Silva, F. J. S. (2024). Performance evaluation of data encryption algorithms: A comparative study of AES, ChaCha20, DES, and Triple-DES. *IEEE Access*, 12, 137330–137346. https://doi.org/10.1109/ACCESS.2024.3464761",
-        "Popa, R. A., Redfield, C. M. S., Zeldovich, N., & Balakrishnan, H. (2011). CryptDB: Protecting confidentiality with efficient query execution on encrypted databases. In *Proceedings of the Twenty-Third ACM Symposium on Operating Systems Principles* (pp. 85–100). Association for Computing Machinery. https://doi.org/10.1145/2043556.2043566",
+        "Khan, A. N., Naveed, A., Mehmood, A., Arora, D., Khan, A. U. R., & Ali, J. (2025). BloomSec: Scalable and privacy-preserving searchable encryption for cloud environments. *PLoS ONE*, 20(12), Article e0336944. https://doi.org/10.1371/journal.pone.0336944",
+        "Noor, A., Izzah, E., & Sugandha, W. (2021). Penggunaan tanda tangan elektronik dalam penyelenggaraan e-government guna mewujudkan pelayanan publik yang efisien. *Journal of Law, Society, and Islamic Civilization*, 9(1), 1–9. https://doi.org/10.20961/jolsic.v9i1.52836",
+        "Pina, E., Ramos, J., Jorge, H., Váz, P., & Silva, J. (2024). Data privacy and ethical considerations in database management. *Journal of Cybersecurity and Privacy*, 4(3), 494–517. https://doi.org/10.3390/jcp4030024 [TODO-PENULIS: lengkapi 3 nama penulis terakhir dari DOI]",
         "Republik Indonesia. (2018). *Peraturan Presiden Republik Indonesia Nomor 95 Tahun 2018 tentang Sistem Pemerintahan Berbasis Elektronik*. Lembaran Negara Republik Indonesia Tahun 2018 Nomor 182.",
         "Republik Indonesia. (2022). *Undang-Undang Republik Indonesia Nomor 27 Tahun 2022 tentang Pelindungan Data Pribadi*. Lembaran Negara Republik Indonesia Tahun 2022 Nomor 196.",
         "Rogaway, P., & Shrimpton, T. (2006). A deterministic approach to authenticated encryption. In B. Roy (Ed.), *Advances in Cryptology – ASIACRYPT 2006* (LNCS Vol. 4284, pp. 514–529). Springer. https://doi.org/10.1007/11935230_34",
-        "Song, D. X., Wagner, D., & Perrig, A. (2000). Practical techniques for searches on encrypted data. In *Proceedings of the 2000 IEEE Symposium on Security and Privacy* (pp. 44–55). IEEE Computer Society. https://doi.org/10.1109/SECPRI.2000.848445",
-        "Trabucco, M., Berguiga, A., Pinto, C. L. R. C., & Le, D. V. (2026). End-to-end encrypted database architecture for secure cloud applications. *Journal of Systems Architecture*, 170, Article 103602. https://doi.org/10.1016/j.sysarc.2025.103602",
+        "Trabucco, M., Andreolini, M., & Ferretti, L. (2026). Practical and secure history-independent indexing for queryable-encrypted databases. *Journal of Information Security and Applications*, 99, Article 104439. https://doi.org/10.1016/j.jisa.2026.104439",
     ]
 
     for ref in references:
